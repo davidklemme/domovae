@@ -26,7 +26,7 @@
 
 		try {
 			await signIn('email', { email, callbackUrl: '/dashboard' });
-		} catch (err) {
+		} catch {
 			error = 'Failed to send magic link. Please try again.';
 		} finally {
 			isLoading = false;
@@ -39,7 +39,7 @@
 
 		try {
 			await signIn(provider, { callbackUrl: '/dashboard' });
-		} catch (err) {
+		} catch {
 			error = `Failed to sign in with ${provider}. Please try again.`;
 		} finally {
 			isLoading = false;
@@ -72,7 +72,7 @@
 				<button
 					on:click={() => handleSocialSignIn('google')}
 					disabled={isLoading}
-					class="flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+					class="flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
 				>
 					<svg class="mr-2 h-5 w-5" viewBox="0 0 24 24">
 						<path
@@ -98,7 +98,7 @@
 				<button
 					on:click={() => handleSocialSignIn('github')}
 					disabled={isLoading}
-					class="flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+					class="flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
 				>
 					<svg class="mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
 						<path
@@ -114,7 +114,7 @@
 			<div class="mt-6">
 				<div class="relative">
 					<div class="absolute inset-0 flex items-center">
-						<div class="w-full border-t border-gray-300" />
+						<div class="w-full border-t border-gray-300"></div>
 					</div>
 					<div class="relative flex justify-center text-sm">
 						<span class="bg-white px-2 text-gray-500">Or continue with email</span>
@@ -135,7 +135,7 @@
 									autocomplete="email"
 									required
 									bind:value={email}
-									class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none sm:text-sm"
 									placeholder="Enter your email"
 								/>
 							</div>
@@ -145,7 +145,7 @@
 							<button
 								type="submit"
 								disabled={isLoading}
-								class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+								class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
 							>
 								{isLoading ? 'Sending...' : 'Send magic link'}
 							</button>

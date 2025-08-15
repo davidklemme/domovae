@@ -14,37 +14,38 @@ Domovae is a real estate platform that helps property owners sell their houses o
 
 ---
 
-## Epic 1: Foundation & Authentication
+## Epic 1: Foundation & Authentication ✅ COMPLETED
 
 **Priority**: Critical  
-**Sprint**: 1-2
+**Sprint**: 1-2  
+**Status**: ✅ COMPLETED
 
-### Feature 1.1: User Authentication System
+### Feature 1.1: User Authentication System ✅ COMPLETED
 
 **Description**: Implement AuthJS with social login and email authentication
 
 #### Tasks:
 
-- [ ] **TASK-1.1.1**: Set up AuthJS configuration
+- [x] **TASK-1.1.1**: Set up AuthJS configuration ✅
   - Install and configure @auth/sveltekit
   - Set up environment variables for auth providers
   - Create auth configuration file
   - **Estimate**: 4 hours
   - **Acceptance Criteria**: AuthJS is configured and working
 
-- [ ] **TASK-1.1.2**: Implement social login providers
+- [x] **TASK-1.1.2**: Implement social login providers ✅
   - Google OAuth integration
   - GitHub OAuth integration (for developers)
   - **Estimate**: 6 hours
   - **Acceptance Criteria**: Users can login with Google/GitHub
 
-- [ ] **TASK-1.1.3**: Implement email authentication
+- [x] **TASK-1.1.3**: Implement email authentication ✅
   - Email/passwordless login flow
   - Magic link generation and validation
   - **Estimate**: 8 hours
   - **Acceptance Criteria**: Users can login with email magic links
 
-- [ ] **TASK-1.1.4**: Create user profile management
+- [x] **TASK-1.1.4**: Create user profile management ✅
   - User profile page
   - Profile editing capabilities
   - **Estimate**: 6 hours
@@ -52,23 +53,23 @@ Domovae is a real estate platform that helps property owners sell their houses o
 
 #### Tests:
 
-- [ ] Unit tests for auth functions
-- [ ] Integration tests for login flows
-- [ ] E2E tests for complete auth journey
+- [x] Unit tests for auth functions ✅
+- [x] Integration tests for login flows ✅
+- [x] E2E tests for complete auth journey ✅
 
-### Feature 1.2: User Database Schema
+### Feature 1.2: User Database Schema ✅ COMPLETED
 
 **Description**: Design and implement user-related database schemas
 
 #### Tasks:
 
-- [ ] **TASK-1.2.1**: Create user schema
+- [x] **TASK-1.2.1**: Create user schema ✅
   - User table with auth fields
   - Profile information fields
   - **Estimate**: 2 hours
   - **Acceptance Criteria**: User schema is defined and migrated
 
-- [ ] **TASK-1.2.2**: Create user roles and permissions
+- [x] **TASK-1.2.2**: Create user roles and permissions ✅
   - Owner role (can create/manage listings)
   - Buyer role (can view listings and book appointments)
   - Admin role (can manage platform)
@@ -77,8 +78,8 @@ Domovae is a real estate platform that helps property owners sell their houses o
 
 #### Tests:
 
-- [ ] Database schema tests
-- [ ] Role permission tests
+- [x] Database schema tests ✅
+- [x] Role permission tests ✅
 
 ---
 

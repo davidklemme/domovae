@@ -18,6 +18,12 @@ declare module '@auth/core/types' {
 			name?: string;
 			image?: string;
 			role: 'owner' | 'buyer' | 'admin';
+			phone?: string;
+			dateOfBirth?: string;
+			address?: string;
+			city?: string;
+			postalCode?: string;
+			country?: string;
 		};
 	}
 
@@ -27,6 +33,12 @@ declare module '@auth/core/types' {
 		name?: string;
 		image?: string;
 		role: 'owner' | 'buyer' | 'admin';
+		phone?: string;
+		dateOfBirth?: string;
+		address?: string;
+		city?: string;
+		postalCode?: string;
+		country?: string;
 	}
 }
 

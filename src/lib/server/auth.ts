@@ -34,13 +34,15 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 		async session({ session, user }) {
 			if (session.user) {
 				session.user.id = user.id;
-				session.user.role = user.role;
+				// Default role - will be enhanced when we implement role management
+				session.user.role = 'buyer';
 			}
 			return session;
 		},
 		async jwt({ token, user }) {
 			if (user) {
-				token.role = user.role;
+				// Default role - will be enhanced when we implement role management
+				token.role = 'buyer';
 			}
 			return token;
 		}

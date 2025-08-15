@@ -41,6 +41,7 @@
 							<span class="text-sm text-gray-700">
 								{$page.data.session.user.name || $page.data.session.user.email}
 							</span>
+							<a href="/profile" class="text-sm text-gray-500 hover:text-gray-700"> Profile </a>
 							<button on:click={handleSignOut} class="text-sm text-gray-500 hover:text-gray-700">
 								Sign out
 							</button>

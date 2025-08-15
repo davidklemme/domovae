@@ -7,7 +7,7 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"prepare": "svelte-kit sync || echo ''",
+		"prepare": "husky",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "eslint . && prettier --check .",
@@ -35,6 +35,8 @@
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^3.0.0",
 		"globals": "^16.0.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.1.5",
 		"playwright": "^1.53.0",
 		"prettier": "^3.4.2",
 		"prettier-plugin-svelte": "^3.3.3",
@@ -49,14 +51,32 @@
 		"vitest-browser-svelte": "^0.1.0"
 	},
 	"dependencies": {
+		"@auth/core": "^0.40.0",
 		"@auth/drizzle-adapter": "^1.10.0",
 		"@auth/sveltekit": "^1.10.0",
 		"@neondatabase/serverless": "^0.10.4",
-		"drizzle-orm": "^0.40.0"
+		"drizzle-orm": "^0.40.0",
+		"nodemailer": "^7.0.5"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
 			"esbuild"
+		]
+	},
+	"lint-staged": {
+		"**/*.{ts,js}": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"**/*.svelte": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"**/*.{json,md,yml,yaml}": [
+			"prettier --write"
+		],
+		"**/*.{css,scss}": [
+			"prettier --write"
 		]
 	}
 }
