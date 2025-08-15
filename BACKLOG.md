@@ -405,6 +405,198 @@ Domovae is a real estate platform that helps property owners sell their houses o
 
 ---
 
+## Epic 6: SEO & Marketing
+
+**Priority**: High  
+**Sprint**: 9-11
+
+### Feature 6.1: SEO Optimization
+
+**Description**: Implement comprehensive SEO features for property listings
+
+#### Tasks:
+
+- [ ] **TASK-6.1.1**: Implement dynamic meta tags
+  - Property-specific title tags
+  - Meta descriptions with property details
+  - Open Graph tags for social sharing
+  - **Estimate**: 6 hours
+  - **Acceptance Criteria**: Each property page has optimized meta tags
+
+- [ ] **TASK-6.1.2**: Create structured data (JSON-LD)
+  - Property schema markup
+  - Real estate specific structured data
+  - Local business schema for agents
+  - **Estimate**: 8 hours
+  - **Acceptance Criteria**: Search engines can understand property data
+
+- [ ] **TASK-6.1.3**: Implement sitemap generation
+  - Dynamic XML sitemap for properties
+  - Sitemap submission to search engines
+  - **Estimate**: 4 hours
+  - **Acceptance Criteria**: Sitemap is generated and accessible
+
+- [ ] **TASK-6.1.4**: Create SEO-friendly URLs
+  - Property slug generation
+  - Location-based URL structure
+  - **Estimate**: 4 hours
+  - **Acceptance Criteria**: URLs are SEO-friendly and descriptive
+
+#### Tests:
+
+- [ ] Meta tag validation tests
+- [ ] Structured data validation tests
+- [ ] Sitemap generation tests
+- [ ] URL structure tests
+
+### Feature 6.2: Content Marketing
+
+**Description**: Implement content marketing features
+
+#### Tasks:
+
+- [ ] **TASK-6.2.1**: Create property blog system
+  - Property market insights
+  - Neighborhood guides
+  - Buying/selling tips
+  - **Estimate**: 12 hours
+  - **Acceptance Criteria**: Blog system is functional and SEO-optimized
+
+- [ ] **TASK-6.2.2**: Implement email marketing
+  - Property alerts
+  - Market updates
+  - Newsletter functionality
+  - **Estimate**: 10 hours
+  - **Acceptance Criteria**: Email marketing system is operational
+
+#### Tests:
+
+- [ ] Blog functionality tests
+- [ ] Email delivery tests
+- [ ] Content optimization tests
+
+---
+
+## Epic 7: GDPR & Privacy Compliance
+
+**Priority**: Critical  
+**Sprint**: 10-12
+
+### Feature 7.1: GDPR Compliance Framework
+
+**Description**: Implement comprehensive GDPR compliance features
+
+#### Tasks:
+
+- [ ] **TASK-7.1.1**: Create privacy policy system
+  - Dynamic privacy policy generation
+  - Version control for policy updates
+  - Multi-language support (German/English)
+  - **Estimate**: 8 hours
+  - **Acceptance Criteria**: Privacy policy is comprehensive and accessible
+
+- [ ] **TASK-7.1.2**: Implement cookie consent management
+  - Cookie banner with granular controls
+  - Consent tracking and storage
+  - Cookie preference center
+  - **Estimate**: 10 hours
+  - **Acceptance Criteria**: Cookie consent is properly managed
+
+- [ ] **TASK-7.1.3**: Create data processing register
+  - Data processing activities documentation
+  - Legal basis tracking
+  - Data retention policies
+  - **Estimate**: 6 hours
+  - **Acceptance Criteria**: All data processing is documented
+
+- [ ] **TASK-7.1.4**: Implement data subject rights
+  - Right to access (data export)
+  - Right to rectification
+  - Right to erasure (deletion)
+  - Right to data portability
+  - **Estimate**: 12 hours
+  - **Acceptance Criteria**: Users can exercise their GDPR rights
+
+#### Tests:
+
+- [ ] Privacy policy tests
+- [ ] Cookie consent tests
+- [ ] Data subject rights tests
+- [ ] Compliance validation tests
+
+### Feature 7.2: Data Protection & Security
+
+**Description**: Implement data protection and security measures
+
+#### Tasks:
+
+- [ ] **TASK-7.2.1**: Implement data encryption
+  - Database encryption at rest
+  - Data transmission encryption (TLS)
+  - **Estimate**: 6 hours
+  - **Acceptance Criteria**: All sensitive data is encrypted
+
+- [ ] **TASK-7.2.2**: Create data retention policies
+  - Automatic data deletion
+  - Retention period management
+  - **Estimate**: 4 hours
+  - **Acceptance Criteria**: Data is automatically deleted after retention period
+
+- [ ] **TASK-7.2.3**: Implement audit logging
+  - User activity logging
+  - Data access logging
+  - Compliance reporting
+  - **Estimate**: 8 hours
+  - **Acceptance Criteria**: All data access is logged and auditable
+
+- [ ] **TASK-7.2.4**: Create data breach notification system
+  - Breach detection
+  - Notification workflows
+  - Regulatory reporting
+  - **Estimate**: 6 hours
+  - **Acceptance Criteria**: Data breaches can be detected and reported
+
+#### Tests:
+
+- [ ] Encryption tests
+- [ ] Data retention tests
+- [ ] Audit logging tests
+- [ ] Security vulnerability tests
+
+### Feature 7.3: Legal Compliance
+
+**Description**: Implement legal compliance features for German market
+
+#### Tasks:
+
+- [ ] **TASK-7.3.1**: Create terms of service
+  - German law compliant terms
+  - Property-specific terms
+  - Multi-language support
+  - **Estimate**: 6 hours
+  - **Acceptance Criteria**: Terms of service are legally compliant
+
+- [ ] **TASK-7.3.2**: Implement imprint (Impressum)
+  - German legal requirements
+  - Contact information
+  - Business registration details
+  - **Estimate**: 4 hours
+  - **Acceptance Criteria**: Imprint meets German legal requirements
+
+- [ ] **TASK-7.3.3**: Create data processing agreements
+  - DPA templates for third parties
+  - Vendor management
+  - **Estimate**: 4 hours
+  - **Acceptance Criteria**: DPAs are available for third-party services
+
+#### Tests:
+
+- [ ] Legal compliance tests
+- [ ] Terms validation tests
+- [ ] Imprint compliance tests
+
+---
+
 ## Technical Debt & Infrastructure
 
 ### Database Migrations
