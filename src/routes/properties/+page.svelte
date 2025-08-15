@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { signOut } from '@auth/sveltekit/client';
+	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 
@@ -11,23 +11,21 @@
 	let selectedType = '';
 	let minPrice = '';
 	let maxPrice = '';
-	let selectedStatus = '';
+	let selectedStatus = 'live';
 
 	const propertyTypes = ['apartment', 'house', 'condo', 'townhouse', 'villa'];
-	const statusOptions = ['live', 'published', 'in_negotiation', 'draft', 'archived'];
+	const statusOptions = ['live', 'published', 'in_negotiation', 'archived', 'draft'];
 
 	function filterProperties() {
 		filteredProperties = properties.filter((property) => {
 			// Search term filter
-			if (searchTerm) {
-				const searchLower = searchTerm.toLowerCase();
-				const titleMatch = property.title.toLowerCase().includes(searchLower);
-				const descriptionMatch = property.description?.toLowerCase().includes(searchLower) || false;
-				const cityMatch = property.location?.city?.toLowerCase().includes(searchLower) || false;
-
-				if (!titleMatch && !descriptionMatch && !cityMatch) {
-					return false;
-				}
+			if (
+				searchTerm &&
+				!property.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+				!property.description?.toLowerCase().includes(searchTerm.toLowerCase()) &&
+				!property.location?.city.toLowerCase().includes(searchTerm.toLowerCase())
+			) {
+				return false;
 			}
 
 			// Property type filter
@@ -36,10 +34,10 @@
 			}
 
 			// Price range filter
-			if (minPrice && minPrice.trim() !== '' && property.price < parseInt(minPrice)) {
+			if (minPrice && property.price < parseInt(minPrice)) {
 				return false;
 			}
-			if (maxPrice && maxPrice.trim() !== '' && property.price > parseInt(maxPrice)) {
+			if (maxPrice && property.price > parseInt(maxPrice)) {
 				return false;
 			}
 
@@ -57,7 +55,7 @@
 		selectedType = '';
 		minPrice = '';
 		maxPrice = '';
-		selectedStatus = '';
+		selectedStatus = 'live';
 		filterProperties();
 	}
 
@@ -102,56 +100,23 @@
 		}
 	}
 
-	async function handleSignOut() {
-		await signOut({ callbackUrl: '/' });
+	$: {
+		filterProperties();
 	}
-
-	$: (searchTerm, selectedType, minPrice, maxPrice, selectedStatus, filterProperties());
 </script>
 
 <svelte:head>
-	<title>Dashboard - Domovae</title>
+	<title>Properties - Domovae</title>
 </svelte:head>
 
 <div class="min-h-screen bg-gray-50">
-	<!-- Navigation -->
-	<nav class="bg-white shadow">
-		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-			<div class="flex h-16 justify-between">
-				<div class="flex items-center">
-					<h1 class="text-xl font-semibold text-gray-900">Domovae</h1>
-				</div>
-				<div class="flex items-center space-x-4">
-					{#if data.session?.user}
-						<div class="flex items-center space-x-3">
-							{#if data.session.user.image}
-								<img
-									class="h-8 w-8 rounded-full"
-									src={data.session.user.image}
-									alt={data.session.user.name || 'User'}
-								/>
-							{/if}
-							<span class="text-sm text-gray-700">
-								{data.session.user.name || data.session.user.email}
-							</span>
-							<a href="/profile" class="text-sm text-gray-500 hover:text-gray-700"> Profile </a>
-							<button onclick={handleSignOut} class="text-sm text-gray-500 hover:text-gray-700">
-								Sign out
-							</button>
-						</div>
-					{/if}
-				</div>
-			</div>
-		</div>
-	</nav>
-
 	<!-- Header -->
 	<div class="border-b bg-white shadow-sm">
 		<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 			<div class="flex items-center justify-between">
 				<div>
-					<h1 class="text-3xl font-bold text-gray-900">My Dashboard</h1>
-					<p class="mt-2 text-gray-600">Manage your properties and view listings</p>
+					<h1 class="text-3xl font-bold text-gray-900">Properties</h1>
+					<p class="mt-2 text-gray-600">Discover your perfect home</p>
 				</div>
 				{#if data.session?.user}
 					<button
@@ -218,7 +183,6 @@
 						bind:value={selectedStatus}
 						class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 					>
-						<option value="">All Status</option>
 						{#each statusOptions as status}
 							<option value={status}>{getStatusLabel(status)}</option>
 						{/each}
@@ -315,49 +279,6 @@
 									{property.propertyType}
 								</span>
 							</div>
-
-							<!-- Action buttons for own properties -->
-							{#if data.session?.user?.id === property.ownerId}
-								<div class="mt-3 flex space-x-2">
-									<button
-										onclick={(e) => {
-											e.stopPropagation();
-											goto(`/properties/${property.id}/edit`);
-										}}
-										class="flex-1 rounded bg-blue-600 px-3 py-1 text-xs text-white hover:bg-blue-700"
-									>
-										Edit
-									</button>
-									<button
-										onclick={async (e) => {
-											e.stopPropagation();
-											if (confirm('Are you sure you want to archive this property?')) {
-												try {
-													const response = await fetch(`/api/properties/${property.id}`, {
-														method: 'DELETE'
-													});
-
-													if (response.ok) {
-														// Refresh the page to update the list
-														window.location.reload();
-													} else {
-														const errorData = await response.json();
-														alert(
-															`Failed to archive property: ${errorData.error || 'Unknown error'}`
-														);
-													}
-												} catch (error) {
-													console.error('Error archiving property:', error);
-													alert('Failed to archive property. Please try again.');
-												}
-											}
-										}}
-										class="flex-1 rounded bg-red-600 px-3 py-1 text-xs text-white hover:bg-red-700"
-									>
-										Archive
-									</button>
-								</div>
-							{/if}
 						</div>
 					</div>
 				{/each}

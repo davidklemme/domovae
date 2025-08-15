@@ -11,53 +11,51 @@ import {
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
-// AuthJS required tables
-export const users = pgTable('users', {
-	id: serial('id').primaryKey(),
-	email: varchar('email', { length: 255 }).notNull().unique(),
-	name: varchar('name', { length: 255 }),
-	image: varchar('image', { length: 500 }),
+// AuthJS required tables - using exact AuthJS schema
+export const users = pgTable('user', {
+	id: text('id').primaryKey(),
+	name: text('name'),
+	email: text('email').notNull().unique(),
+	emailVerified: timestamp('emailVerified'),
+	image: text('image'),
+	// Custom fields
 	role: varchar('role', { length: 20 }).default('buyer'),
-	emailVerified: timestamp('email_verified'),
-	createdAt: timestamp('created_at').defaultNow(),
-	updatedAt: timestamp('updated_at').defaultNow(),
-
-	// Profile information
 	phone: varchar('phone', { length: 20 }),
-	dateOfBirth: date('date_of_birth'),
+	dateOfBirth: date('dateOfBirth'),
 	address: text('address'),
 	city: varchar('city', { length: 100 }),
-	postalCode: varchar('postal_code', { length: 10 }),
+	postalCode: varchar('postalCode', { length: 10 }),
 	country: varchar('country', { length: 50 }).default('Germany'),
-
-	// Verification status
-	isVerified: boolean('is_verified').default(false),
-	verificationDate: timestamp('verification_date')
+	isVerified: boolean('isVerified').default(false),
+	verificationDate: timestamp('verificationDate'),
+	createdAt: timestamp('createdAt').defaultNow(),
+	updatedAt: timestamp('updatedAt').defaultNow()
 });
 
-export const accounts = pgTable('accounts', {
-	id: serial('id').primaryKey(),
-	userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }),
-	type: varchar('type', { length: 255 }).notNull(),
-	provider: varchar('provider', { length: 255 }).notNull(),
-	providerAccountId: varchar('provider_account_id', { length: 255 }).notNull(),
-	refresh_token: text('refresh_token'),
-	access_token: text('access_token'),
-	expires_at: integer('expires_at'),
-	token_type: varchar('token_type', { length: 255 }),
-	scope: varchar('scope', { length: 255 }),
-	id_token: text('id_token'),
-	session_state: varchar('session_state', { length: 255 })
+export const accounts = pgTable('account', {
+	id: text('id').primaryKey(),
+	userId: text('userId')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	type: text('type').notNull(),
+	provider: text('provider').notNull(),
+	providerAccountId: text('providerAccountId').notNull(),
+	refreshToken: text('refreshToken'),
+	accessToken: text('accessToken'),
+	expiresAt: integer('expiresAt'),
+	tokenType: text('tokenType'),
+	scope: text('scope'),
+	idToken: text('idToken'),
+	sessionState: text('sessionState')
 });
 
-export const sessions = pgTable('sessions', {
-	id: serial('id').primaryKey(),
-	sessionToken: varchar('session_token', { length: 255 }).notNull().unique(),
-	userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }),
+export const sessions = pgTable('session', {
+	sessionToken: varchar('sessionToken', { length: 255 }).primaryKey(),
+	userId: text('userId').references(() => users.id, { onDelete: 'cascade' }),
 	expires: timestamp('expires').notNull()
 });
 
-export const verificationTokens = pgTable('verification_tokens', {
+export const verificationTokens = pgTable('verificationToken', {
 	identifier: varchar('identifier', { length: 255 }).notNull(),
 	token: varchar('token', { length: 255 }).notNull().unique(),
 	expires: timestamp('expires').notNull()
@@ -86,93 +84,93 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 // GDPR & Privacy Compliance Tables
 export const consentRecords = pgTable('consent_records', {
 	id: serial('id').primaryKey(),
-	userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }),
+	userId: text('userId').references(() => users.id, { onDelete: 'cascade' }),
 
 	// Consent details
-	consentType: varchar('consent_type', { length: 50 }).notNull(),
-	consentStatus: varchar('consent_status', { length: 20 }).notNull(),
-	legalBasis: varchar('legal_basis', { length: 100 }), // e.g., 'consent', 'legitimate_interest'
+	consentType: varchar('consentType', { length: 50 }).notNull(),
+	consentStatus: varchar('consentStatus', { length: 20 }).notNull(),
+	legalBasis: varchar('legalBasis', { length: 100 }), // e.g., 'consent', 'legitimate_interest'
 
 	// Consent metadata
-	ipAddress: varchar('ip_address', { length: 45 }),
-	userAgent: text('user_agent'),
-	consentVersion: varchar('consent_version', { length: 20 }),
+	ipAddress: varchar('ipAddress', { length: 45 }),
+	userAgent: text('userAgent'),
+	consentVersion: varchar('consentVersion', { length: 20 }),
 
 	// Timestamps
-	grantedAt: timestamp('granted_at'),
-	withdrawnAt: timestamp('withdrawn_at'),
-	createdAt: timestamp('created_at').defaultNow(),
-	updatedAt: timestamp('updated_at').defaultNow()
+	grantedAt: timestamp('grantedAt'),
+	withdrawnAt: timestamp('withdrawnAt'),
+	createdAt: timestamp('createdAt').defaultNow(),
+	updatedAt: timestamp('updatedAt').defaultNow()
 });
 
 export const dataProcessingActivities = pgTable('data_processing_activities', {
 	id: serial('id').primaryKey(),
 
 	// Activity details
-	activityName: varchar('activity_name', { length: 255 }).notNull(),
+	activityName: varchar('activityName', { length: 255 }).notNull(),
 	description: text('description'),
 
 	// Legal basis
-	legalBasis: varchar('legal_basis', { length: 100 }).notNull(),
+	legalBasis: varchar('legalBasis', { length: 100 }).notNull(),
 	purpose: text('purpose'),
 
 	// Data categories
-	dataCategories: jsonb('data_categories'), // Array of data types processed
+	dataCategories: jsonb('dataCategories'), // Array of data types processed
 	recipients: jsonb('recipients'), // Array of third-party recipients
 
 	// Retention
-	retentionPeriod: integer('retention_period'), // in days
-	retentionBasis: text('retention_basis'),
+	retentionPeriod: integer('retentionPeriod'), // in days
+	retentionBasis: text('retentionBasis'),
 
 	// Status
-	isActive: boolean('is_active').default(true),
+	isActive: boolean('isActive').default(true),
 
 	// Timestamps
-	createdAt: timestamp('created_at').defaultNow(),
-	updatedAt: timestamp('updated_at').defaultNow()
+	createdAt: timestamp('createdAt').defaultNow(),
+	updatedAt: timestamp('updatedAt').defaultNow()
 });
 
 export const dataSubjectRequests = pgTable('data_subject_requests', {
 	id: serial('id').primaryKey(),
-	userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }),
+	userId: text('userId').references(() => users.id, { onDelete: 'cascade' }),
 
 	// Request details
-	requestType: varchar('request_type', { length: 30 }).notNull(),
-	status: varchar('request_status', { length: 20 }).default('pending'),
+	requestType: varchar('requestType', { length: 30 }).notNull(),
+	status: varchar('status', { length: 20 }).default('pending'),
 
 	// Request metadata
 	description: text('description'),
-	requestedData: jsonb('requested_data'), // Specific data requested
+	requestedData: jsonb('requestedData'), // Specific data requested
 
 	// Processing
-	processedAt: timestamp('processed_at'),
-	processedBy: integer('processed_by').references(() => users.id),
-	responseData: jsonb('response_data'), // Data provided to user
+	processedAt: timestamp('processedAt'),
+	processedBy: text('processedBy').references(() => users.id),
+	responseData: jsonb('responseData'), // Data provided to user
 
 	// Timestamps
-	createdAt: timestamp('created_at').defaultNow(),
-	updatedAt: timestamp('updated_at').defaultNow()
+	createdAt: timestamp('createdAt').defaultNow(),
+	updatedAt: timestamp('updatedAt').defaultNow()
 });
 
 export const auditLogs = pgTable('audit_logs', {
 	id: serial('id').primaryKey(),
 
 	// Log details
-	userId: integer('user_id').references(() => users.id),
+	userId: text('userId').references(() => users.id),
 	action: varchar('action', { length: 100 }).notNull(),
 	resource: varchar('resource', { length: 100 }), // e.g., 'user', 'property', 'appointment'
-	resourceId: integer('resource_id'),
+	resourceId: integer('resourceId'),
 
 	// Changes
-	oldValues: jsonb('old_values'),
-	newValues: jsonb('new_values'),
+	oldValues: jsonb('oldValues'),
+	newValues: jsonb('newValues'),
 
 	// Metadata
-	ipAddress: varchar('ip_address', { length: 45 }),
-	userAgent: text('user_agent'),
+	ipAddress: varchar('ipAddress', { length: 45 }),
+	userAgent: text('userAgent'),
 
 	// Timestamps
-	createdAt: timestamp('created_at').defaultNow()
+	createdAt: timestamp('createdAt').defaultNow()
 });
 
 // GDPR Relations
@@ -198,5 +196,203 @@ export const auditLogsRelations = relations(auditLogs, ({ one }) => ({
 	user: one(users, {
 		fields: [auditLogs.userId],
 		references: [users.id]
+	})
+}));
+
+// Property Management Tables
+export const properties = pgTable('properties', {
+	id: serial('id').primaryKey(),
+	ownerId: text('owner_id')
+		.references(() => users.id, { onDelete: 'cascade' })
+		.notNull(),
+
+	// Basic property information
+	title: varchar('title', { length: 255 }).notNull(),
+	description: text('description'),
+	price: integer('price').notNull(), // Price in cents
+	currency: varchar('currency', { length: 3 }).default('EUR'),
+
+	// Property type and details
+	propertyType: varchar('property_type', { length: 50 }).notNull(), // house, apartment, etc.
+	propertySubtype: varchar('property_subtype', { length: 50 }), // detached, semi-detached, etc.
+
+	// Property characteristics
+	bedrooms: integer('bedrooms'),
+	bathrooms: integer('bathrooms'),
+	livingArea: integer('living_area'), // in square meters
+	totalArea: integer('total_area'), // in square meters
+	yearBuilt: integer('year_built'),
+
+	// Status management
+	status: varchar('status', { length: 20 }).default('draft'), // draft, published, live, in_negotiation, removed, archived
+
+	// Timestamps
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow(),
+	publishedAt: timestamp('published_at'),
+	archivedAt: timestamp('archived_at')
+});
+
+export const propertyLocations = pgTable('property_locations', {
+	id: serial('id').primaryKey(),
+	propertyId: integer('property_id')
+		.references(() => properties.id, { onDelete: 'cascade' })
+		.notNull(),
+
+	// Address information
+	street: varchar('street', { length: 255 }).notNull(),
+	houseNumber: varchar('house_number', { length: 20 }),
+	city: varchar('city', { length: 100 }).notNull(),
+	postalCode: varchar('postal_code', { length: 10 }).notNull(),
+	state: varchar('state', { length: 100 }),
+	country: varchar('country', { length: 50 }).default('Germany'),
+
+	// Geographic coordinates
+	latitude: varchar('latitude', { length: 20 }),
+	longitude: varchar('longitude', { length: 20 }),
+
+	// Additional location details
+	neighborhood: varchar('neighborhood', { length: 100 }),
+	district: varchar('district', { length: 100 }),
+
+	// Timestamps
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow()
+});
+
+export const propertyMedia = pgTable('property_media', {
+	id: serial('id').primaryKey(),
+	propertyId: integer('property_id')
+		.references(() => properties.id, { onDelete: 'cascade' })
+		.notNull(),
+
+	// Media details
+	mediaType: varchar('media_type', { length: 20 }).notNull(), // image, video, document
+	mediaUrl: varchar('media_url', { length: 500 }).notNull(),
+	mediaThumbnail: varchar('media_thumbnail', { length: 500 }),
+	altText: varchar('alt_text', { length: 255 }),
+
+	// Media metadata
+	fileName: varchar('file_name', { length: 255 }),
+	fileSize: integer('file_size'), // in bytes
+	mimeType: varchar('mime_type', { length: 100 }),
+
+	// Display settings
+	isHero: boolean('is_hero').default(false), // Hero image/video
+	displayOrder: integer('display_order').default(0),
+	isActive: boolean('is_active').default(true),
+
+	// Timestamps
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow()
+});
+
+export const amenities = pgTable('amenities', {
+	id: serial('id').primaryKey(),
+
+	// Amenity details
+	name: varchar('name', { length: 100 }).notNull(),
+	description: text('description'),
+	category: varchar('category', { length: 50 }).notNull(), // kitchen, bathroom, outdoor, etc.
+	icon: varchar('icon', { length: 100 }), // Icon identifier
+
+	// Status
+	isActive: boolean('is_active').default(true),
+
+	// Timestamps
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow()
+});
+
+export const propertyAmenities = pgTable('property_amenities', {
+	id: serial('id').primaryKey(),
+	propertyId: integer('property_id')
+		.references(() => properties.id, { onDelete: 'cascade' })
+		.notNull(),
+	amenityId: integer('amenity_id')
+		.references(() => amenities.id, { onDelete: 'cascade' })
+		.notNull(),
+
+	// Additional details
+	description: text('description'), // Custom description for this property
+	isIncluded: boolean('is_included').default(true),
+
+	// Timestamps
+	createdAt: timestamp('created_at').defaultNow()
+});
+
+export const proximities = pgTable('proximities', {
+	id: serial('id').primaryKey(),
+	propertyId: integer('property_id')
+		.references(() => properties.id, { onDelete: 'cascade' })
+		.notNull(),
+
+	// Proximity details (Germany-specific, following Immobilienscout24 patterns)
+	proximityType: varchar('proximity_type', { length: 50 }).notNull(), // public_transport, school, shopping, hospital, park, etc.
+	proximityName: varchar('proximity_name', { length: 255 }),
+
+	// Distance information
+	distance: integer('distance'), // in meters
+	distanceUnit: varchar('distance_unit', { length: 10 }).default('m'),
+	travelTime: integer('travel_time'), // in minutes
+	travelMode: varchar('travel_mode', { length: 20 }), // walking, driving, public_transport
+
+	// Additional details
+	description: text('description'),
+	coordinates: jsonb('coordinates'), // {lat, lng} for mapping
+
+	// Timestamps
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow()
+});
+
+// Property Relations
+export const propertiesRelations = relations(properties, ({ one, many }) => ({
+	owner: one(users, {
+		fields: [properties.ownerId],
+		references: [users.id]
+	}),
+	location: one(propertyLocations, {
+		fields: [properties.id],
+		references: [propertyLocations.propertyId]
+	}),
+	media: many(propertyMedia),
+	amenities: many(propertyAmenities),
+	proximities: many(proximities)
+}));
+
+export const propertyLocationsRelations = relations(propertyLocations, ({ one }) => ({
+	property: one(properties, {
+		fields: [propertyLocations.propertyId],
+		references: [properties.id]
+	})
+}));
+
+export const propertyMediaRelations = relations(propertyMedia, ({ one }) => ({
+	property: one(properties, {
+		fields: [propertyMedia.propertyId],
+		references: [properties.id]
+	})
+}));
+
+export const amenitiesRelations = relations(amenities, ({ many }) => ({
+	properties: many(propertyAmenities)
+}));
+
+export const propertyAmenitiesRelations = relations(propertyAmenities, ({ one }) => ({
+	property: one(properties, {
+		fields: [propertyAmenities.propertyId],
+		references: [properties.id]
+	}),
+	amenity: one(amenities, {
+		fields: [propertyAmenities.amenityId],
+		references: [amenities.id]
+	})
+}));
+
+export const proximitiesRelations = relations(proximities, ({ one }) => ({
+	property: one(properties, {
+		fields: [proximities.propertyId],
+		references: [properties.id]
 	})
 }));

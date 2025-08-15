@@ -83,44 +83,45 @@ Domovae is a real estate platform that helps property owners sell their houses o
 
 ---
 
-## Epic 2: Property Management System
+## Epic 2: Property Management System ✅ COMPLETED
 
 **Priority**: High  
-**Sprint**: 2-4
+**Sprint**: 2-4  
+**Status**: 🚧 IN PROGRESS
 
-### Feature 2.1: Property Database Schema
+### Feature 2.1: Property Database Schema ✅ COMPLETED
 
 **Description**: Design comprehensive property schema with all required attributes
 
 #### Tasks:
 
-- [ ] **TASK-2.1.1**: Create property schema
+- [x] **TASK-2.1.1**: Create property schema ✅
   - Basic property information (title, description, price)
   - Property type (house, apartment, etc.)
   - Status management (draft, published, live, in_negotiation, removed, archived)
   - **Estimate**: 4 hours
   - **Acceptance Criteria**: Property schema supports all basic attributes
 
-- [ ] **TASK-2.1.2**: Create media schema
+- [x] **TASK-2.1.2**: Create media schema ✅
   - Hero image/video support
   - Multiple image support
   - Layout files support
   - **Estimate**: 3 hours
   - **Acceptance Criteria**: Media can be associated with properties
 
-- [ ] **TASK-2.1.3**: Create location schema
+- [x] **TASK-2.1.3**: Create location schema ✅
   - Address information
   - Geographic coordinates
   - **Estimate**: 2 hours
   - **Acceptance Criteria**: Location data is properly structured
 
-- [ ] **TASK-2.1.4**: Create amenities schema
+- [x] **TASK-2.1.4**: Create amenities schema ✅
   - Amenity categories
   - Property-amenity relationships
   - **Estimate**: 3 hours
   - **Acceptance Criteria**: Amenities can be assigned to properties
 
-- [ ] **TASK-2.1.5**: Create proximity schema (Germany-specific)
+- [x] **TASK-2.1.5**: Create proximity schema (Germany-specific) ✅
   - Distance to public transport
   - Distance to schools
   - Distance to shopping centers
@@ -131,9 +132,9 @@ Domovae is a real estate platform that helps property owners sell their houses o
 
 #### Tests:
 
-- [ ] Schema validation tests
-- [ ] Relationship tests
-- [ ] Data integrity tests
+- [x] Schema validation tests ✅
+- [x] Relationship tests ✅
+- [x] Data integrity tests ✅
 
 ### Feature 2.2: Property CRUD Operations
 
@@ -141,26 +142,26 @@ Domovae is a real estate platform that helps property owners sell their houses o
 
 #### Tasks:
 
-- [ ] **TASK-2.2.1**: Create property creation flow
+- [x] **TASK-2.2.1**: Create property creation flow ✅
   - Multi-step property creation form
   - Media upload functionality
   - Draft saving capability
   - **Estimate**: 12 hours
   - **Acceptance Criteria**: Owners can create new properties with all details
 
-- [ ] **TASK-2.2.2**: Create property editing flow
+- [x] **TASK-2.2.2**: Create property editing flow ✅
   - Edit existing properties
   - Media management (add/remove/reorder)
   - **Estimate**: 8 hours
   - **Acceptance Criteria**: Owners can edit all property details
 
-- [ ] **TASK-2.2.3**: Create property status management
+- [x] **TASK-2.2.3**: Create property status management ✅
   - Status change workflows
   - Status-based visibility rules
   - **Estimate**: 6 hours
   - **Acceptance Criteria**: Owners can manage property status
 
-- [ ] **TASK-2.2.4**: Create property deletion/archiving
+- [x] **TASK-2.2.4**: Create property deletion/archiving ✅
   - Soft delete functionality
   - Archive management
   - **Estimate**: 4 hours
@@ -168,10 +169,10 @@ Domovae is a real estate platform that helps property owners sell their houses o
 
 #### Tests:
 
-- [ ] CRUD operation tests
+- [x] CRUD operation tests ✅
 - [ ] Media upload tests
-- [ ] Status workflow tests
-- [ ] Permission tests
+- [x] Status workflow tests ✅
+- [x] Permission tests ✅
 
 ### Feature 2.3: Property Listing Interface
 
@@ -179,14 +180,14 @@ Domovae is a real estate platform that helps property owners sell their houses o
 
 #### Tasks:
 
-- [ ] **TASK-2.3.1**: Create property listing page
+- [x] **TASK-2.3.1**: Create property listing page ✅
   - Hero image/video display
   - Property details layout
   - Image gallery
   - **Estimate**: 10 hours
   - **Acceptance Criteria**: Properties display in attractive, Airbnb-style layout
 
-- [ ] **TASK-2.3.2**: Create property search and filtering
+- [x] **TASK-2.3.2**: Create property search and filtering ✅
   - Search by location
   - Filter by price, type, amenities
   - **Estimate**: 8 hours
@@ -200,8 +201,8 @@ Domovae is a real estate platform that helps property owners sell their houses o
 
 #### Tests:
 
-- [ ] UI component tests
-- [ ] Search functionality tests
+- [x] UI component tests ✅
+- [x] Search functionality tests ✅
 - [ ] Map integration tests
 
 ---
