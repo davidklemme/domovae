@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 	import MediaUpload from '$lib/components/MediaUpload.svelte';
@@ -11,6 +10,7 @@
 	let property = data.property;
 	let loading = false;
 	let error = '';
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let uploadedMedia: any[] = property?.media || [];
 
 	// Form data
@@ -52,7 +52,7 @@
 				const errorData = await response.json();
 				error = errorData.message || 'Failed to update property';
 			}
-		} catch (err) {
+		} catch {
 			error = 'An error occurred while updating the property';
 		} finally {
 			loading = false;
@@ -106,7 +106,7 @@
 	}
 
 	function handleMediaUploaded(event: CustomEvent) {
-		const { media, category } = event.detail;
+		const { media } = event.detail;
 		uploadedMedia = [...uploadedMedia, ...media];
 	}
 
@@ -141,7 +141,7 @@
 		<!-- Progress Bar -->
 		<div class="mb-8">
 			<div class="flex items-center justify-between">
-				{#each Array(totalSteps) as _, i}
+				{#each Array(totalSteps) as _unused, i (i)}
 					<div class="flex items-center">
 						<div
 							class="flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium {i +

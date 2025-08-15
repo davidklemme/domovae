@@ -3,6 +3,7 @@
 
 	export let propertyId: number;
 	export let mediaCategory: 'hero' | 'slideshow' | 'layout';
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	export let existingMedia: any[] = [];
 
 	const dispatch = createEventDispatcher();
@@ -189,7 +190,7 @@
 		<div class="space-y-3">
 			<h4 class="text-sm font-medium text-gray-900">Uploaded {getCategoryTitle()}</h4>
 			<div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-				{#each categoryMedia as media}
+				{#each categoryMedia as media (media.id)}
 					<div class="group relative">
 						<img
 							src={media.mediaUrl}

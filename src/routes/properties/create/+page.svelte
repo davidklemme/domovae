@@ -9,6 +9,7 @@
 	let isLoading = false;
 	let error = '';
 	let propertyId: number | null = null;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let uploadedMedia: any[] = [];
 
 	// Form data
@@ -65,7 +66,7 @@
 	}
 
 	function handleMediaUploaded(event: CustomEvent) {
-		const { media, category } = event.detail;
+		const { media } = event.detail;
 		uploadedMedia = [...uploadedMedia, ...media];
 	}
 
@@ -224,7 +225,7 @@
 			<!-- Progress Bar -->
 			<div class="mb-8">
 				<div class="flex items-center justify-between">
-					{#each Array(totalSteps) as _, i}
+					{#each Array(totalSteps) as _unused, i (i)}
 						{@const stepNumber = i + 1}
 						<div class="flex items-center">
 							<div
@@ -554,7 +555,7 @@
 								<div>
 									<h4 class="text-md mb-4 font-medium text-gray-900">Property Amenities</h4>
 									<div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
-										{#each ['Balcony', 'Garden', 'Parking', 'Elevator', 'Air Conditioning', 'Heating', 'Kitchen', 'Washing Machine'] as amenity}
+										{#each ['Balcony', 'Garden', 'Parking', 'Elevator', 'Air Conditioning', 'Heating', 'Kitchen', 'Washing Machine'] as amenity (amenity)}
 											<label class="flex items-center">
 												<input
 													type="checkbox"
@@ -569,7 +570,7 @@
 								<div>
 									<h4 class="text-md mb-4 font-medium text-gray-900">Nearby Facilities</h4>
 									<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-										{#each ['Public Transport', 'Schools', 'Shopping Centers', 'Hospitals', 'Parks', 'Restaurants'] as facility}
+										{#each ['Public Transport', 'Schools', 'Shopping Centers', 'Hospitals', 'Parks', 'Restaurants'] as facility (facility)}
 											<div class="flex items-center justify-between">
 												<span class="text-sm text-gray-700">{facility}</span>
 												<input

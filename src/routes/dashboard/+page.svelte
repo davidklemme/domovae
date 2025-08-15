@@ -5,7 +5,8 @@
 
 	export let data: PageData;
 
-	let properties = data.properties;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	let properties: any[] = data.properties;
 	let filteredProperties = properties;
 	let searchTerm = '';
 	let selectedType = '';
@@ -193,7 +194,7 @@
 						class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 					>
 						<option value="">All Types</option>
-						{#each propertyTypes as type}
+						{#each propertyTypes as type (type)}
 							<option value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
 						{/each}
 					</select>
@@ -226,7 +227,7 @@
 						class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 					>
 						<option value="">All Status</option>
-						{#each statusOptions as status}
+						{#each statusOptions as status (status)}
 							<option value={status}>{getStatusLabel(status)}</option>
 						{/each}
 					</select>
@@ -255,7 +256,7 @@
 			</div>
 		{:else}
 			<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-				{#each filteredProperties as property}
+				{#each filteredProperties as property (property.id)}
 					<div
 						onclick={() => goto(`/properties/${property.id}`)}
 						class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-sm transition-shadow hover:shadow-md"
