@@ -268,6 +268,7 @@ export const propertyMedia = pgTable('property_media', {
 
 	// Media details
 	mediaType: varchar('media_type', { length: 20 }).notNull(), // image, video, document
+	mediaCategory: varchar('media_category', { length: 20 }).notNull(), // hero, slideshow, layout
 	mediaUrl: varchar('media_url', { length: 500 }).notNull(),
 	mediaThumbnail: varchar('media_thumbnail', { length: 500 }),
 	altText: varchar('alt_text', { length: 255 }),
@@ -278,7 +279,6 @@ export const propertyMedia = pgTable('property_media', {
 	mimeType: varchar('mime_type', { length: 100 }),
 
 	// Display settings
-	isHero: boolean('is_hero').default(false), // Hero image/video
 	displayOrder: integer('display_order').default(0),
 	isActive: boolean('is_active').default(true),
 

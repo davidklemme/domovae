@@ -2,11 +2,14 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import MediaUpload from '$lib/components/MediaUpload.svelte';
 
 	let currentStep = 1;
 	let totalSteps = 4;
 	let isLoading = false;
 	let error = '';
+	let propertyId: number | null = null;
+	let uploadedMedia: any[] = [];
 
 	// Form data
 	let formData = {
@@ -61,14 +64,37 @@
 		}
 	}
 
+	function handleMediaUploaded(event: CustomEvent) {
+		const { media, category } = event.detail;
+		uploadedMedia = [...uploadedMedia, ...media];
+	}
+
+	function handleMediaDeleted(event: CustomEvent) {
+		const { mediaId } = event.detail;
+		uploadedMedia = uploadedMedia.filter((media) => media.id !== mediaId);
+	}
+
 	async function saveDraft() {
 		isLoading = true;
 		error = '';
 
 		try {
+			// Map form data to match service expectations
 			const requestData = {
-				...formData,
-				status: 'draft'
+				title: formData.title,
+				description: formData.description,
+				price: formData.price,
+				propertyType: formData.propertyType,
+				status: 'draft',
+				bedrooms: formData.bedrooms,
+				bathrooms: formData.bathrooms,
+				squareMeters: formData.livingArea, // Map livingArea to squareMeters
+				yearBuilt: formData.yearBuilt,
+				// Location data
+				address: formData.street,
+				city: formData.city,
+				postalCode: formData.postalCode,
+				country: 'Germany'
 			};
 
 			console.log('Sending data to API:', requestData);
@@ -86,8 +112,12 @@
 			console.log('Response data:', responseData);
 
 			if (response.ok) {
-				// Show success message and redirect to dashboard
-				goto('/dashboard');
+				console.log('Response data:', responseData);
+				console.log('Property ID:', responseData.property?.id);
+				// Set the property ID for media uploads
+				propertyId = responseData.property?.id;
+				// Don't redirect, stay on the form
+				error = '';
 			} else {
 				error =
 					responseData.details ||
@@ -472,41 +502,49 @@
 						<!-- Step 3: Media -->
 						<div>
 							<h3 class="mb-6 text-lg font-medium text-gray-900">Property Media</h3>
-							<div class="text-center">
-								<div class="rounded-lg border-2 border-dashed border-gray-300 p-12">
-									<svg
-										class="mx-auto h-12 w-12 text-gray-400"
-										stroke="currentColor"
-										fill="none"
-										viewBox="0 0 48 48"
-									>
-										<path
-											d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-											stroke-width="2"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
-									</svg>
-									<div class="mt-4">
-										<label
-											for="media-upload"
-											class="cursor-pointer rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
-										>
-											Upload Photos & Videos
-										</label>
-										<input
-											id="media-upload"
-											type="file"
-											multiple
-											accept="image/*,video/*"
-											class="hidden"
-										/>
+
+							{#if !propertyId}
+								<div class="py-8 text-center">
+									<div class="text-gray-500">
+										Please save the property first to upload media files.
 									</div>
-									<p class="mt-2 text-sm text-gray-600">
-										Upload high-quality photos and videos of your property
-									</p>
+									<button
+										onclick={saveDraft}
+										class="mt-4 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+									>
+										Save Draft First
+									</button>
 								</div>
-							</div>
+							{:else}
+								<div class="space-y-8">
+									<!-- Hero Image Upload -->
+									<MediaUpload
+										{propertyId}
+										mediaCategory="hero"
+										existingMedia={uploadedMedia}
+										on:uploaded={handleMediaUploaded}
+										on:deleted={handleMediaDeleted}
+									/>
+
+									<!-- Slideshow Images Upload -->
+									<MediaUpload
+										{propertyId}
+										mediaCategory="slideshow"
+										existingMedia={uploadedMedia}
+										on:uploaded={handleMediaUploaded}
+										on:deleted={handleMediaDeleted}
+									/>
+
+									<!-- Layout Images Upload -->
+									<MediaUpload
+										{propertyId}
+										mediaCategory="layout"
+										existingMedia={uploadedMedia}
+										on:uploaded={handleMediaUploaded}
+										on:deleted={handleMediaDeleted}
+									/>
+								</div>
+							{/if}
 						</div>
 					{:else if currentStep === 4}
 						<!-- Step 4: Amenities & Proximities -->

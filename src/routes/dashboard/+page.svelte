@@ -106,7 +106,14 @@
 		await signOut({ callbackUrl: '/' });
 	}
 
-	$: (searchTerm, selectedType, minPrice, maxPrice, selectedStatus, filterProperties());
+	$: (searchTerm,
+		selectedType,
+		minPrice,
+		maxPrice,
+		selectedStatus,
+		(() => {
+			filterProperties();
+		})());
 </script>
 
 <svelte:head>

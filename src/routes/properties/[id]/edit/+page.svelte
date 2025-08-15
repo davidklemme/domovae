@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
+	import MediaUpload from '$lib/components/MediaUpload.svelte';
 
 	export let data: PageData;
 
@@ -10,6 +11,7 @@
 	let property = data.property;
 	let loading = false;
 	let error = '';
+	let uploadedMedia: any[] = property?.media || [];
 
 	// Form data
 	let formData = {
@@ -101,6 +103,16 @@
 		if (currentStep > 1) {
 			currentStep--;
 		}
+	}
+
+	function handleMediaUploaded(event: CustomEvent) {
+		const { media, category } = event.detail;
+		uploadedMedia = [...uploadedMedia, ...media];
+	}
+
+	function handleMediaDeleted(event: CustomEvent) {
+		const { mediaId } = event.detail;
+		uploadedMedia = uploadedMedia.filter((media) => media.id !== mediaId);
 	}
 </script>
 
@@ -395,23 +407,46 @@
 				</div>
 			{/if}
 
-			<!-- Step 4: Media & Amenities (Placeholder) -->
+			<!-- Step 4: Media & Amenities -->
 			{#if currentStep === 4}
 				<div class="rounded-lg bg-white p-6 shadow">
 					<h2 class="mb-6 text-xl font-semibold">Media & Amenities</h2>
-					<div class="py-8 text-center">
-						<p class="mb-4 text-gray-600">
-							Media upload and amenities management will be implemented in the next iteration.
-						</p>
-						<div class="rounded-md bg-gray-50 p-4">
-							<p class="text-sm text-gray-500">This step will include:</p>
-							<ul class="mt-2 space-y-1 text-sm text-gray-500">
-								<li>• Hero image/video upload</li>
-								<li>• Multiple image gallery</li>
-								<li>• Layout file uploads</li>
-								<li>• Amenities selection</li>
-								<li>• Proximity information</li>
-							</ul>
+					<div class="space-y-8">
+						<!-- Hero Image Upload -->
+						<MediaUpload
+							propertyId={property.id}
+							mediaCategory="hero"
+							existingMedia={uploadedMedia}
+							on:uploaded={handleMediaUploaded}
+							on:deleted={handleMediaDeleted}
+						/>
+
+						<!-- Slideshow Images Upload -->
+						<MediaUpload
+							propertyId={property.id}
+							mediaCategory="slideshow"
+							existingMedia={uploadedMedia}
+							on:uploaded={handleMediaUploaded}
+							on:deleted={handleMediaDeleted}
+						/>
+
+						<!-- Layout Images Upload -->
+						<MediaUpload
+							propertyId={property.id}
+							mediaCategory="layout"
+							existingMedia={uploadedMedia}
+							on:uploaded={handleMediaUploaded}
+							on:deleted={handleMediaDeleted}
+						/>
+
+						<!-- Amenities Section (Placeholder) -->
+						<div class="border-t border-gray-200 pt-8">
+							<h3 class="mb-4 text-lg font-medium text-gray-900">Amenities</h3>
+							<div class="py-4 text-center">
+								<p class="text-gray-600">
+									Amenities management will be implemented in the next iteration.
+								</p>
+							</div>
 						</div>
 					</div>
 				</div>
