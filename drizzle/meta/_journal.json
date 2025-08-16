@@ -15,6 +15,20 @@
       "when": 1755298213283,
       "tag": "0001_cheerful_dragon_lord",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1755332618544,
+      "tag": "0002_lyrical_sabra",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1755333397934,
+      "tag": "0003_bouncy_legion",
+      "breakpoints": true
     }
   ]
 }

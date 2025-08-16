@@ -209,6 +209,9 @@ export const properties = pgTable('properties', {
 	// Basic property information
 	title: varchar('title', { length: 255 }).notNull(),
 	description: text('description'),
+	locationDescription: text('location_description'),
+	neighborhoodHighlights: text('neighborhood_highlights'),
+	propertyHighlights: text('property_highlights'),
 	price: integer('price').notNull(), // Price in cents
 	currency: varchar('currency', { length: 3 }).default('EUR'),
 
@@ -358,7 +361,8 @@ export const propertiesRelations = relations(properties, ({ one, many }) => ({
 	}),
 	media: many(propertyMedia),
 	amenities: many(propertyAmenities),
-	proximities: many(proximities)
+	proximities: many(proximities),
+	questions: many(propertyQuestions)
 }));
 
 export const propertyLocationsRelations = relations(propertyLocations, ({ one }) => ({
@@ -394,5 +398,66 @@ export const proximitiesRelations = relations(proximities, ({ one }) => ({
 	property: one(properties, {
 		fields: [proximities.propertyId],
 		references: [properties.id]
+	})
+}));
+
+// Q&A Tables
+export const propertyQuestions = pgTable('property_questions', {
+	id: serial('id').primaryKey(),
+	propertyId: integer('property_id')
+		.references(() => properties.id, { onDelete: 'cascade' })
+		.notNull(),
+	askedBy: text('asked_by')
+		.references(() => users.id, { onDelete: 'cascade' })
+		.notNull(),
+
+	// Question details
+	question: text('question').notNull(),
+	status: varchar('status', { length: 20 }).default('pending'), // pending, answered, published, rejected
+
+	// Timestamps
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow()
+});
+
+export const propertyAnswers = pgTable('property_answers', {
+	id: serial('id').primaryKey(),
+	questionId: integer('question_id')
+		.references(() => propertyQuestions.id, { onDelete: 'cascade' })
+		.notNull(),
+	answeredBy: text('answered_by')
+		.references(() => users.id, { onDelete: 'cascade' })
+		.notNull(),
+
+	// Answer details
+	answer: text('answer').notNull(),
+	isPublished: boolean('is_published').default(false),
+
+	// Timestamps
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow()
+});
+
+// Q&A Relations
+export const propertyQuestionsRelations = relations(propertyQuestions, ({ one, many }) => ({
+	property: one(properties, {
+		fields: [propertyQuestions.propertyId],
+		references: [properties.id]
+	}),
+	askedByUser: one(users, {
+		fields: [propertyQuestions.askedBy],
+		references: [users.id]
+	}),
+	answers: many(propertyAnswers)
+}));
+
+export const propertyAnswersRelations = relations(propertyAnswers, ({ one }) => ({
+	question: one(propertyQuestions, {
+		fields: [propertyAnswers.questionId],
+		references: [propertyQuestions.id]
+	}),
+	answeredByUser: one(users, {
+		fields: [propertyAnswers.answeredBy],
+		references: [users.id]
 	})
 }));

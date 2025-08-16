@@ -3,6 +3,9 @@
 export interface CreatePropertyData {
 	title: string;
 	description?: string;
+	locationDescription?: string;
+	neighborhoodHighlights?: string;
+	propertyHighlights?: string;
 	price: number;
 	propertyType: string;
 	status?: string;
@@ -22,6 +25,9 @@ export interface CreatePropertyData {
 export interface UpdatePropertyData {
 	title?: string;
 	description?: string;
+	locationDescription?: string;
+	neighborhoodHighlights?: string;
+	propertyHighlights?: string;
 	price?: number;
 	propertyType?: string;
 	status?: string;
@@ -51,6 +57,9 @@ export interface PropertyWithLocation {
 	id: number;
 	title: string;
 	description?: string | null;
+	locationDescription?: string | null;
+	neighborhoodHighlights?: string | null;
+	propertyHighlights?: string | null;
 	price: number;
 	propertyType: string;
 	status?: string | null;

@@ -59,6 +59,7 @@
 		"@neondatabase/serverless": "^0.10.4",
 		"@vercel/blob": "^1.1.1",
 		"drizzle-orm": "^0.40.0",
+		"marked": "^16.1.2",
 		"nodemailer": "^7.0.5",
 		"resend": "^6.0.1"
 	},

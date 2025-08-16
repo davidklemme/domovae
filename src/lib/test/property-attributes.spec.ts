@@ -56,16 +56,16 @@ describe('Property Service Functions', () => {
 			};
 			expect(validatePropertyData(validData)).toEqual([]);
 
-			// Test missing city when address is provided
+			// Test missing city when street is provided
 			const invalidData1 = {
 				title: 'Valid Property',
 				price: 250000,
 				propertyType: 'apartment',
-				address: 'Test Street'
+				street: 'Test Street'
 				// Missing city
 			};
 			expect(validatePropertyData(invalidData1)).toContain(
-				'City is required when address is provided'
+				'City is required when street is provided'
 			);
 
 			// Test missing postal code when city is provided

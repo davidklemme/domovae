@@ -34,8 +34,8 @@ export const validatePropertyData = (data: any): string[] => {
 	}
 
 	// Validate location data if provided
-	if (data.address && !data.city) {
-		errors.push('City is required when address is provided');
+	if (data.street && !data.city) {
+		errors.push('City is required when street is provided');
 	}
 
 	if (data.city && !data.postalCode) {
@@ -80,6 +80,9 @@ export const createProperty = async (propertyData: CreatePropertyData, session: 
 		.values({
 			title: propertyData.title,
 			description: propertyData.description || null,
+			locationDescription: propertyData.locationDescription || null,
+			neighborhoodHighlights: propertyData.neighborhoodHighlights || null,
+			propertyHighlights: propertyData.propertyHighlights || null,
 			price: price,
 			propertyType: propertyData.propertyType,
 			status: propertyData.status || 'draft',
@@ -148,6 +151,9 @@ export const updateProperty = async (
 		.set({
 			title: propertyData.title as string,
 			description: (propertyData.description as string) || null,
+			locationDescription: (propertyData.locationDescription as string) || null,
+			neighborhoodHighlights: (propertyData.neighborhoodHighlights as string) || null,
+			propertyHighlights: (propertyData.propertyHighlights as string) || null,
 			price: price,
 			propertyType: (propertyData.propertyType as string) || 'apartment',
 			status: (propertyData.status as string) || 'draft',
