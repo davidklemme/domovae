@@ -16,4 +16,4 @@ User-agent: anthropic-ai
 Allow: /
 
 # Sitemap location
-Sitemap: https://domovae.com/sitemap.xml
+Sitemap: https://brickly.homes/sitemap.xml

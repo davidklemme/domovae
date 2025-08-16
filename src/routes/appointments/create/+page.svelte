@@ -155,7 +155,7 @@
 </script>
 
 <svelte:head>
-	<title>Schedule Viewing - {data.property.title} | Domovae</title>
+	<title>Schedule Viewing - {data.property.title} | Brickly</title>
 </svelte:head>
 
 <div class="min-h-screen bg-gray-50">

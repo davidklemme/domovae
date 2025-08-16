@@ -4,7 +4,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	export let form: unknown;
+	export let form: Record<string, unknown> | undefined;
 
 	let activeTab = data.role;
 	let showNotesModal = false;
@@ -121,7 +121,7 @@
 </script>
 
 <svelte:head>
-	<title>My Appointments | Domovae</title>
+	<title>My Appointments | Brickly</title>
 </svelte:head>
 
 <div class="min-h-screen bg-gray-50">

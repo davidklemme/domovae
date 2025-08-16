@@ -21,7 +21,7 @@
 </script>
 
 <svelte:head>
-	<title>Authentication Error - Domovae</title>
+	<title>Authentication Error - Brickly</title>
 </svelte:head>
 
 <div class="flex min-h-screen flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">

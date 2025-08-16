@@ -197,7 +197,7 @@
 	<meta property="og:title" content={data.seoMeta.title} />
 	<meta property="og:description" content={data.seoMeta.description} />
 	<meta property="og:image" content={data.seoMeta.image} />
-	<meta property="og:site_name" content="Domovae" />
+	<meta property="og:site_name" content="Brickly" />
 	<meta property="og:locale" content="de_DE" />
 
 	<!-- Twitter -->

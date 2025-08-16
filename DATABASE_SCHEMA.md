@@ -1,8 +1,8 @@
-# Database Schema Design - Domovae
+# Database Schema Design - Brickly
 
 ## Overview
 
-This document outlines the complete database schema for the Domovae real estate platform, designed specifically for the German market with inspiration from Immobilienscout24.
+This document outlines the complete database schema for the Brickly real estate platform, designed specifically for the German market with inspiration from Immobilienscout24.
 
 ## Core Tables
 

@@ -42,17 +42,17 @@ describe('SEO Service', () => {
 		updatedAt: new Date('2024-01-15')
 	};
 
-	const baseUrl = 'https://domovae.com';
+	const baseUrl = 'https://brickly.homes';
 
 	describe('generateSEOMeta', () => {
 		it('should generate proper SEO meta data', () => {
 			const seoMeta = generateSEOMeta(mockProperty, baseUrl);
 
-			expect(seoMeta.title).toBe('Beautiful 3-Bedroom Apartment in Berlin - Berlin | Domovae');
+			expect(seoMeta.title).toBe('Beautiful 3-Bedroom Apartment in Berlin - Berlin | Brickly');
 			expect(seoMeta.description).toContain('This stunning apartment features modern amenities');
 			expect(seoMeta.description.length).toBeLessThanOrEqual(160);
-			expect(seoMeta.image).toBe('https://domovae.com/uploads/property1-main.jpg');
-			expect(seoMeta.url).toBe('https://domovae.com/properties/1');
+			expect(seoMeta.image).toBe('https://brickly.homes/uploads/property1-main.jpg');
+			expect(seoMeta.url).toBe('https://brickly.homes/properties/1');
 			expect(seoMeta.type).toBe('website');
 		});
 
@@ -60,7 +60,7 @@ describe('SEO Service', () => {
 			const propertyWithoutMedia = { ...mockProperty, media: [] };
 			const seoMeta = generateSEOMeta(propertyWithoutMedia, baseUrl);
 
-			expect(seoMeta.image).toBe('https://domovae.com/default-property-image.jpg');
+			expect(seoMeta.image).toBe('https://brickly.homes/default-property-image.jpg');
 		});
 
 		it('should handle properties without description', () => {
@@ -126,7 +126,7 @@ describe('SEO Service', () => {
 	describe('generateCanonicalUrl', () => {
 		it('should generate proper canonical URL', () => {
 			const canonicalUrl = generateCanonicalUrl(mockProperty, baseUrl);
-			expect(canonicalUrl).toBe('https://domovae.com/properties/1');
+			expect(canonicalUrl).toBe('https://brickly.homes/properties/1');
 		});
 	});
 

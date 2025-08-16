@@ -48,7 +48,7 @@
 </script>
 
 <svelte:head>
-	<title>Sign In - Domovae</title>
+	<title>Sign In - Brickly</title>
 </svelte:head>
 
 <div class="flex min-h-screen flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">

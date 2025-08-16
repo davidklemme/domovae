@@ -15,7 +15,7 @@ export interface StructuredData {
 }
 
 export function generateSEOMeta(property: PropertyWithLocation, baseUrl: string): SEOMeta {
-	const title = `${property.title} - ${property.location?.city || 'Property'} | Domovae`;
+	const title = `${property.title} - ${property.location?.city || 'Property'} | Brickly`;
 
 	let description: string;
 	if (property.description) {

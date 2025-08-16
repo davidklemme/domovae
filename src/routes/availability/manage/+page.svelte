@@ -65,7 +65,7 @@
 </script>
 
 <svelte:head>
-	<title>Manage Availability - Domovae</title>
+	<title>Manage Availability - Brickly</title>
 </svelte:head>
 
 <div class="min-h-screen bg-gray-50">
@@ -74,7 +74,7 @@
 		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div class="flex h-16 justify-between">
 				<div class="flex items-center">
-					<a href="/dashboard" class="text-xl font-semibold text-gray-900">Domovae</a>
+					<a href="/dashboard" class="text-xl font-semibold text-gray-900">Brickly</a>
 				</div>
 				<div class="flex items-center space-x-4">
 					<a href="/profile" class="text-sm text-gray-500 hover:text-gray-700">Profile</a>

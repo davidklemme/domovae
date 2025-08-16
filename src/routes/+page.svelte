@@ -12,7 +12,7 @@
 </script>
 
 <svelte:head>
-	<title>Domovae - Find Your Perfect Home</title>
+	<title>Brickly - Find Your Perfect Home</title>
 	<meta
 		name="description"
 		content="Discover beautiful properties for sale. Connect with sellers and find your dream home."
@@ -25,7 +25,7 @@
 		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div class="flex h-16 items-center justify-between">
 				<div class="flex items-center">
-					<h1 class="text-2xl font-bold text-indigo-600">Domovae</h1>
+					<h1 class="text-2xl font-bold text-indigo-600">Brickly</h1>
 				</div>
 				<div class="flex items-center space-x-4">
 					<a
@@ -186,7 +186,7 @@
 	<footer class="bg-gray-800">
 		<div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
 			<div class="text-center">
-				<p class="text-base text-gray-400">&copy; 2024 Domovae. All rights reserved.</p>
+				<p class="text-base text-gray-400">&copy; 2024 Brickly. All rights reserved.</p>
 			</div>
 		</div>
 	</footer>

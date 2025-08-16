@@ -9,7 +9,7 @@ describe('Landing Page', () => {
 
 		// Check for essential elements
 		expect(content).toContain('<svelte:head>');
-		expect(content).toContain('<title>Domovae - Find Your Perfect Home</title>');
+		expect(content).toContain('<title>Brickly - Find Your Perfect Home</title>');
 		expect(content).toContain('name="description"');
 		expect(content).toContain('Discover beautiful properties for sale');
 	});
@@ -20,7 +20,7 @@ describe('Landing Page', () => {
 
 		// Check for navigation
 		expect(content).toContain('<nav');
-		expect(content).toContain('Domovae');
+		expect(content).toContain('Brickly');
 		expect(content).toContain('Sign In');
 		expect(content).toContain('/auth/signin');
 	});
@@ -55,7 +55,7 @@ describe('Landing Page', () => {
 
 		// Check for footer
 		expect(content).toContain('<footer');
-		expect(content).toContain('&copy; 2024 Domovae');
+		expect(content).toContain('&copy; 2024 Brickly');
 	});
 
 	it('should have authentication redirect logic', async () => {

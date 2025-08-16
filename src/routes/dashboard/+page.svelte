@@ -11,7 +11,7 @@
 </script>
 
 <svelte:head>
-	<title>Dashboard - Domovae</title>
+	<title>Dashboard - Brickly</title>
 </svelte:head>
 
 <div class="min-h-screen bg-gray-50">
@@ -20,7 +20,7 @@
 		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div class="flex h-16 justify-between">
 				<div class="flex items-center">
-					<h1 class="text-xl font-semibold text-gray-900">Domovae</h1>
+					<h1 class="text-xl font-semibold text-gray-900">Brickly</h1>
 				</div>
 				<div class="flex items-center space-x-4">
 					{#if data.session?.user}

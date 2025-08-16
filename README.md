@@ -1,10 +1,10 @@
-# Domovae
+# Brickly
 
-**Domovae** is a modern real estate platform designed to help property owners sell their houses and apartments in Germany. Built with cutting-edge web technologies, it provides an Airbnb-style listing experience with comprehensive property management tools.
+**Brickly** is a modern real estate platform designed to help property owners sell their houses and apartments in Germany. Built with cutting-edge web technologies, it provides an Airbnb-style listing experience with comprehensive property management tools.
 
-## What is Domovae?
+## What is Brickly?
 
-Domovae is a full-featured real estate marketplace that connects property sellers with potential buyers. The platform focuses on the German market and provides:
+Brickly is a full-featured real estate marketplace that connects property sellers with potential buyers. The platform focuses on the German market and provides:
 
 ### 🏠 **For Property Owners**
 
@@ -103,7 +103,7 @@ Domovae is a full-featured real estate marketplace that connects property seller
 
    ```sh
    git clone <your-repo-url>
-   cd domovae
+   cd brickly
    ```
 
 2. **Install dependencies**

@@ -1,8 +1,8 @@
-# Domovae - Real Estate Application Backlog
+# Brickly - Real Estate Application Backlog
 
 ## Context
 
-Domovae is a real estate platform that helps property owners sell their houses or apartments. The app provides an Airbnb-style interface for property listings with appointment booking capabilities. The platform includes user authentication, property management, appointment scheduling, and applicant vetting with country-specific rules.
+Brickly is a real estate platform that helps property owners sell their houses or apartments. The app provides an Airbnb-style interface for property listings with appointment booking capabilities. The platform includes user authentication, property management, appointment scheduling, and applicant vetting with country-specific rules.
 
 ## Ground Rules
 

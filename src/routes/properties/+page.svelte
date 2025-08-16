@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>Properties - Domovae</title>
+	<title>Properties - Brickly</title>
 </svelte:head>
 
 <PropertyList
