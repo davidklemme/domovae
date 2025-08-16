@@ -82,9 +82,8 @@
 		}
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	function _goToImage(_index: number) {
-		currentImageIndex = index;
+		currentImageIndex = _index;
 	}
 
 	function openImageModal() {
@@ -311,7 +310,7 @@
 
 								<!-- Side images grid (30% width) -->
 								<div class="col-span-3 grid grid-cols-2 grid-rows-3 gap-2">
-									{#each property.media.slice(1, 7) as _, index}
+									{#each property.media.slice(1, 7) as _, index (index)}
 										<div class="relative aspect-square overflow-hidden rounded-lg">
 											<img
 												src={property.media[index + 1].mediaUrl}
@@ -334,7 +333,7 @@
 									{/each}
 
 									<!-- Fill remaining slots with placeholders if needed -->
-									{#each Array(Math.max(0, 6 - Math.min(property.media.length - 1, 6))) as _, index}
+									{#each Array(Math.max(0, 6 - Math.min(property.media.length - 1, 6))) as _, index (index)}
 										<div class="aspect-square rounded-lg bg-slate-100"></div>
 									{/each}
 								</div>
@@ -345,7 +344,7 @@
 								<div class="border-t border-slate-200 p-6">
 									<h3 class="mb-4 text-lg font-semibold text-slate-900">All Photos</h3>
 									<div class="flex space-x-3 overflow-x-auto pb-2">
-										{#each property.media as _, index}
+										{#each property.media as _, index (index)}
 											<button
 												onclick={() => {
 													currentImageIndex = index;
@@ -424,6 +423,7 @@
 				<!-- Description -->
 				<div class="rounded-lg border border-slate-200 bg-white p-8 shadow-xs">
 					<div class="prose prose-lg max-w-none text-slate-700">
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						{@html renderMarkdown(
 							property.description ||
 								'# About This Property\n\nThis stunning property offers the perfect blend of modern comfort and timeless elegance. Located in a highly sought-after neighborhood, this home provides an exceptional living experience with thoughtful design and premium finishes throughout.\n\n## Key Features\n- Modern kitchen with island\n- Balcony with city views\n- Built-in wardrobes\n- Underfloor heating\n- Smart home features\n- Private parking space'
@@ -438,13 +438,14 @@
 						<div>
 							<h3 class="mb-4 text-lg font-semibold text-slate-800">Perfect Location</h3>
 							<div class="prose prose-sm mb-6 max-w-none text-slate-700">
+								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 								{@html renderMarkdown(
 									property.locationDescription ||
 										`Nestled in the heart of ${property.location?.city}, this property enjoys an enviable location that combines urban convenience with residential tranquility. The area is known for its excellent amenities, top-rated schools, and vibrant community atmosphere.`
 								)}
 							</div>
 							<div class="space-y-3">
-								{#each neighborhoodHighlights as highlight}
+								{#each neighborhoodHighlights as highlight (highlight)}
 									<div class="flex items-center space-x-3">
 										<span class="text-lg">{highlight.split(' ')[0]}</span>
 										<span class="text-slate-700">{highlight.split(' ').slice(1).join(' ')}</span>
@@ -480,7 +481,7 @@
 				<div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
 					<h2 class="mb-6 text-2xl font-bold text-slate-900">Property Features</h2>
 					<div class="grid gap-4 md:grid-cols-2">
-						{#each propertyFeatures as feature}
+						{#each propertyFeatures as feature (feature)}
 							<div class="flex items-center space-x-3">
 								<div class="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100">
 									<svg

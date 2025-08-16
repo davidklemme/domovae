@@ -7,8 +7,38 @@
 	export let currentUserId: string | undefined;
 	export let currentUserRole: string | undefined;
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	let questions: any[] = [];
+	// Types for Q&A
+	interface User {
+		id: string;
+		name: string;
+		email: string;
+		image?: string;
+	}
+
+	interface PropertyAnswer {
+		id: number;
+		questionId: number;
+		answeredBy: string;
+		answer: string;
+		isPublished: boolean;
+		createdAt: string;
+		updatedAt: string;
+		answeredByUser?: User;
+	}
+
+	interface PropertyQuestion {
+		id: number;
+		propertyId: number;
+		askedBy: string;
+		question: string;
+		status: 'pending' | 'answered' | 'published' | 'rejected';
+		createdAt: string;
+		updatedAt: string;
+		askedByUser?: User;
+		answers: PropertyAnswer[];
+	}
+
+	let questions: PropertyQuestion[] = [];
 	let newQuestion = '';
 	let isLoading = false;
 	let error = '';
@@ -189,13 +219,11 @@
 		return currentUserId && currentUserId === propertyOwnerId;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	function canDeleteQuestion(question: any) {
+	function canDeleteQuestion(question: PropertyQuestion) {
 		return currentUserId && question.askedBy === currentUserId;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	function canManageAnswer(_answer: any) {
+	function _canManageAnswer(_answer: PropertyAnswer) {
 		return currentUserId && currentUserId === propertyOwnerId;
 	}
 
@@ -401,8 +429,7 @@
 								</div>
 							</div>
 
-							// eslint-disable-next-line @typescript-eslint/no-explicit-any
-							{#each question.answers.filter((a: any) => a.isPublished) as answer (answer.id)}
+							{#each question.answers.filter((a: PropertyAnswer) => a.isPublished) as answer, i (answer.id || i)}
 								<div class="ml-4 rounded-lg bg-white p-3">
 									<p class="text-slate-700">{answer.answer}</p>
 									<div class="mt-2 text-sm text-slate-600">

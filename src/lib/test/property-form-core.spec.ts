@@ -69,21 +69,15 @@ describe('PropertyForm Core Functionality', () => {
 				propertyHighlights: existingProperty.propertyHighlights || '',
 				price: existingProperty.price || '',
 				propertyType: existingProperty.propertyType || '',
-				propertySubtype: existingProperty.propertySubtype || '',
 				bedrooms: existingProperty.bedrooms || '',
 				bathrooms: existingProperty.bathrooms || '',
 				livingArea: existingProperty.livingArea || '',
-				totalArea: existingProperty.totalArea || '',
 				yearBuilt: existingProperty.yearBuilt || '',
 
 				// Location
 				street: existingProperty.location?.street || '',
-				houseNumber: existingProperty.location?.houseNumber || '',
 				city: existingProperty.location?.city || '',
-				postalCode: existingProperty.location?.postalCode || '',
-				state: existingProperty.location?.state || '',
-				neighborhood: existingProperty.location?.neighborhood || '',
-				district: existingProperty.location?.district || ''
+				postalCode: existingProperty.location?.postalCode || ''
 			};
 
 			// Check that data is properly mapped
@@ -160,8 +154,16 @@ describe('PropertyForm Core Functionality', () => {
 		it('should handle draft status correctly', () => {
 			const formData = {
 				title: 'Test Property',
+				description: '',
+				locationDescription: '',
+				neighborhoodHighlights: '',
+				propertyHighlights: '',
 				price: '500000',
 				propertyType: 'apartment',
+				bedrooms: '',
+				bathrooms: '',
+				livingArea: '',
+				yearBuilt: '',
 				street: 'Test Street',
 				city: 'Test City',
 				postalCode: '12345'
