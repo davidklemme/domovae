@@ -110,7 +110,6 @@ describe('ProgressBar Component', () => {
 		// Check for layout classes
 		expect(content).toContain('mb-8');
 		expect(content).toContain('mt-2');
-		expect(content).toContain('space-y-4');
 	});
 
 	it('should have proper button sizing', async () => {

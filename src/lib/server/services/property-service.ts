@@ -2,6 +2,7 @@ import { db } from '$lib/server/db';
 import { properties, propertyLocations } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import type { Session } from '@auth/core/types';
+import type { CreatePropertyData } from '$lib/types/property';
 
 // Helper function to convert string to number or null
 export const toNumberOrNull = (value: unknown): number | null => {
@@ -51,7 +52,7 @@ export const canCreateProperty = (): boolean => {
 };
 
 // Property creation function
-export const createProperty = async (propertyData: Record<string, unknown>, session: Session) => {
+export const createProperty = async (propertyData: CreatePropertyData, session: Session) => {
 	// Validate session
 	if (!session?.user) {
 		throw new Error('Unauthorized');
@@ -80,26 +81,21 @@ export const createProperty = async (propertyData: Record<string, unknown>, sess
 			title: propertyData.title,
 			description: propertyData.description || null,
 			price: price,
-			propertyType: propertyData.propertyType || 'apartment',
+			propertyType: propertyData.propertyType,
 			status: propertyData.status || 'draft',
 			bedrooms: toNumberOrNull(propertyData.bedrooms),
 			bathrooms: toNumberOrNull(propertyData.bathrooms),
-			livingArea: toNumberOrNull(propertyData.squareMeters),
+			livingArea: toNumberOrNull(propertyData.livingArea),
 			yearBuilt: toNumberOrNull(propertyData.yearBuilt),
 			ownerId: session.user.id
 		})
 		.returning();
 
 	// Create location
-	if (
-		propertyData.address ||
-		propertyData.city ||
-		propertyData.postalCode ||
-		propertyData.country
-	) {
+	if (propertyData.street || propertyData.city || propertyData.postalCode || propertyData.country) {
 		await db.insert(propertyLocations).values({
 			propertyId: newProperty[0].id,
-			street: propertyData.address || '',
+			street: propertyData.street || '',
 			city: propertyData.city || '',
 			postalCode: propertyData.postalCode || '',
 			country: propertyData.country || 'Germany',
@@ -114,7 +110,7 @@ export const createProperty = async (propertyData: Record<string, unknown>, sess
 // Property update function
 export const updateProperty = async (
 	propertyId: number,
-	propertyData: Record<string, unknown>,
+	propertyData: CreatePropertyData,
 	session: Session
 ) => {
 	// Validate session
@@ -150,14 +146,14 @@ export const updateProperty = async (
 	const updatedProperty = await db
 		.update(properties)
 		.set({
-			title: propertyData.title,
-			description: propertyData.description || null,
+			title: propertyData.title as string,
+			description: (propertyData.description as string) || null,
 			price: price,
-			propertyType: propertyData.propertyType || 'apartment',
-			status: propertyData.status || 'draft',
+			propertyType: (propertyData.propertyType as string) || 'apartment',
+			status: (propertyData.status as string) || 'draft',
 			bedrooms: toNumberOrNull(propertyData.bedrooms),
 			bathrooms: toNumberOrNull(propertyData.bathrooms),
-			livingArea: toNumberOrNull(propertyData.squareMeters),
+			livingArea: toNumberOrNull(propertyData.livingArea),
 			yearBuilt: toNumberOrNull(propertyData.yearBuilt),
 			updatedAt: new Date()
 		})
@@ -166,7 +162,7 @@ export const updateProperty = async (
 
 	// Handle location - create or update
 	if (
-		propertyData.address ||
+		propertyData.street ||
 		propertyData.city ||
 		propertyData.postalCode ||
 		propertyData.country ||
@@ -183,7 +179,7 @@ export const updateProperty = async (
 			await db
 				.update(propertyLocations)
 				.set({
-					street: (propertyData.address as string) || '',
+					street: (propertyData.street as string) || '',
 					city: (propertyData.city as string) || '',
 					postalCode: (propertyData.postalCode as string) || '',
 					country: (propertyData.country as string) || 'Germany',
@@ -195,13 +191,13 @@ export const updateProperty = async (
 		} else {
 			// Create new location
 			await db.insert(propertyLocations).values({
-				propertyId: propertyId,
-				street: propertyData.address || '',
-				city: propertyData.city || '',
-				postalCode: propertyData.postalCode || '',
-				country: propertyData.country || 'Germany',
-				latitude: propertyData.latitude,
-				longitude: propertyData.longitude
+				propertyId: propertyId as number,
+				street: (propertyData.street as string) || '',
+				city: (propertyData.city as string) || '',
+				postalCode: (propertyData.postalCode as string) || '',
+				country: (propertyData.country as string) || 'Germany',
+				latitude: propertyData.latitude as string,
+				longitude: propertyData.longitude as string
 			});
 		}
 	}
@@ -282,7 +278,11 @@ export const getAllProperties = async (session?: Session) => {
 		// Non-authenticated users only see 'live' properties
 		return allProperties
 			.filter((property) => property.status === 'live')
-			.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+			.sort(
+				(a, b) =>
+					new Date(b.createdAt || new Date()).getTime() -
+					new Date(a.createdAt || new Date()).getTime()
+			);
 	} else {
 		// Authenticated users see:
 		// - All 'live', 'published', 'in_negotiation' properties from everyone
@@ -304,7 +304,10 @@ export const getAllProperties = async (session?: Session) => {
 			if (isOwnA && isOwnB) {
 				if (a.status === 'draft' && b.status !== 'draft') return -1;
 				if (b.status === 'draft' && a.status !== 'draft') return 1;
-				return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+				return (
+					new Date(b.createdAt || new Date()).getTime() -
+					new Date(a.createdAt || new Date()).getTime()
+				);
 			}
 
 			// If only one is own property, put it first
@@ -312,7 +315,10 @@ export const getAllProperties = async (session?: Session) => {
 			if (!isOwnA && isOwnB) return 1;
 
 			// Both are other properties, sort by creation date
-			return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+			return (
+				new Date(b.createdAt || new Date()).getTime() -
+				new Date(a.createdAt || new Date()).getTime()
+			);
 		});
 	}
 };

@@ -32,18 +32,24 @@ export const actions: Actions = {
 				price: parseInt(formData.get('price') as string),
 				propertyType: formData.get('propertyType') as string,
 				status: (formData.get('status') as string) || 'draft',
-				bedrooms: formData.get('bedrooms') as string,
-				bathrooms: formData.get('bathrooms') as string,
-				squareMeters: formData.get('squareMeters') as string,
-				yearBuilt: formData.get('yearBuilt') as string,
-				address: formData.get('address') as string,
+				bedrooms: formData.get('bedrooms')
+					? parseInt(formData.get('bedrooms') as string)
+					: undefined,
+				bathrooms: formData.get('bathrooms')
+					? parseInt(formData.get('bathrooms') as string)
+					: undefined,
+				livingArea: formData.get('squareMeters')
+					? parseInt(formData.get('squareMeters') as string)
+					: undefined,
+				yearBuilt: formData.get('yearBuilt')
+					? parseInt(formData.get('yearBuilt') as string)
+					: undefined,
+				street: formData.get('address') as string,
 				city: formData.get('city') as string,
 				postalCode: formData.get('postalCode') as string,
 				country: (formData.get('country') as string) || 'Germany',
-				latitude: formData.get('latitude') ? parseFloat(formData.get('latitude') as string) : null,
-				longitude: formData.get('longitude')
-					? parseFloat(formData.get('longitude') as string)
-					: null
+				latitude: formData.get('latitude') as string,
+				longitude: formData.get('longitude') as string
 			};
 
 			const newProperty = await createProperty(propertyData, session);
