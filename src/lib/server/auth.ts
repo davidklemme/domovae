@@ -16,16 +16,36 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 		async session({ session, token }) {
 			if (session.user && token) {
 				session.user.id = token.sub || '';
-				// Default role - will be enhanced when we implement role management
-				session.user.role = (token.role as 'buyer' | 'owner' | 'admin') || 'buyer';
+				// Fetch user role from database
+				try {
+					const { users } = await import('./db/schema');
+					const { eq } = await import('drizzle-orm');
+					const userRecord = await db.query.users.findFirst({
+						where: eq(users.id, token.sub || '')
+					});
+					session.user.role = (userRecord?.role as 'buyer' | 'owner' | 'admin') || 'buyer';
+				} catch (error) {
+					console.error('Error fetching user role:', error);
+					session.user.role = 'buyer';
+				}
 			}
 			return session;
 		},
 		async jwt({ token, user }) {
 			if (user) {
 				token.id = user.id;
-				// Default role - will be enhanced when we implement role management
-				token.role = 'buyer';
+				// Fetch user role from database
+				try {
+					const { users } = await import('./db/schema');
+					const { eq } = await import('drizzle-orm');
+					const userRecord = await db.query.users.findFirst({
+						where: eq(users.id, user.id)
+					});
+					token.role = userRecord?.role || 'buyer';
+				} catch (error) {
+					console.error('Error fetching user role for JWT:', error);
+					token.role = 'buyer';
+				}
 			}
 			return token;
 		}

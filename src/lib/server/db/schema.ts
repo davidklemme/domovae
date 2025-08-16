@@ -64,7 +64,10 @@ export const verificationTokens = pgTable('verificationToken', {
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
 	accounts: many(accounts),
-	sessions: many(sessions)
+	sessions: many(sessions),
+	buyerAppointments: many(appointments, { relationName: 'buyerAppointments' }),
+	ownerAppointments: many(appointments, { relationName: 'ownerAppointments' }),
+	availabilityWindows: many(ownerAvailabilityWindows)
 }));
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -362,7 +365,8 @@ export const propertiesRelations = relations(properties, ({ one, many }) => ({
 	media: many(propertyMedia),
 	amenities: many(propertyAmenities),
 	proximities: many(proximities),
-	questions: many(propertyQuestions)
+	questions: many(propertyQuestions),
+	appointments: many(appointments)
 }));
 
 export const propertyLocationsRelations = relations(propertyLocations, ({ one }) => ({
@@ -458,6 +462,93 @@ export const propertyAnswersRelations = relations(propertyAnswers, ({ one }) => 
 	}),
 	answeredByUser: one(users, {
 		fields: [propertyAnswers.answeredBy],
+		references: [users.id]
+	})
+}));
+
+// Appointment Tables
+export const appointments = pgTable('appointments', {
+	id: serial('id').primaryKey(),
+	propertyId: integer('property_id')
+		.references(() => properties.id, { onDelete: 'cascade' })
+		.notNull(),
+	buyerId: text('buyer_id')
+		.references(() => users.id, { onDelete: 'cascade' })
+		.notNull(),
+	ownerId: text('owner_id')
+		.references(() => users.id, { onDelete: 'cascade' })
+		.notNull(),
+
+	// Appointment details
+	scheduledAt: timestamp('scheduled_at').notNull(),
+	duration: integer('duration').default(60), // minutes
+	type: varchar('type', { length: 20 }).default('viewing'), // viewing, consultation, negotiation
+
+	// Status
+	status: varchar('status', { length: 20 }).default('requested'), // requested, confirmed, cancelled, completed, no_show
+
+	// Communication
+	notes: text('notes'),
+	buyerNotes: text('buyer_notes'),
+	ownerNotes: text('owner_notes'),
+
+	// Calendar integration
+	externalCalendarId: varchar('external_calendar_id', { length: 255 }),
+	externalEventId: varchar('external_event_id', { length: 255 }),
+
+	// Timestamps
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow(),
+	confirmedAt: timestamp('confirmed_at'),
+	cancelledAt: timestamp('cancelled_at')
+});
+
+// Appointment Relations
+export const appointmentsRelations = relations(appointments, ({ one }) => ({
+	property: one(properties, {
+		fields: [appointments.propertyId],
+		references: [properties.id]
+	}),
+	buyer: one(users, {
+		fields: [appointments.buyerId],
+		references: [users.id],
+		relationName: 'buyerAppointments'
+	}),
+	owner: one(users, {
+		fields: [appointments.ownerId],
+		references: [users.id],
+		relationName: 'ownerAppointments'
+	})
+}));
+
+// Owner Availability Windows (specific time slots, no recurring)
+export const ownerAvailabilityWindows = pgTable('owner_availability_windows', {
+	id: serial('id').primaryKey(),
+	ownerId: text('owner_id')
+		.references(() => users.id, { onDelete: 'cascade' })
+		.notNull(),
+
+	// Specific date and time slot
+	date: date('date').notNull(),
+	startTime: varchar('start_time', { length: 5 }).notNull(), // HH:MM format
+	endTime: varchar('end_time', { length: 5 }).notNull(), // HH:MM format
+	slotDuration: integer('slot_duration').default(30), // minutes per slot
+
+	// Window settings
+	isActive: boolean('is_active').default(true),
+	timezone: varchar('timezone', { length: 50 }).default('Europe/Berlin'),
+	isRecurring: boolean('is_recurring').default(false), // Weekly recurring slot
+
+	// Metadata
+	notes: text('notes'), // Optional notes about this time slot
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow()
+});
+
+// Availability Windows Relations
+export const ownerAvailabilityWindowsRelations = relations(ownerAvailabilityWindows, ({ one }) => ({
+	owner: one(users, {
+		fields: [ownerAvailabilityWindows.ownerId],
 		references: [users.id]
 	})
 }));

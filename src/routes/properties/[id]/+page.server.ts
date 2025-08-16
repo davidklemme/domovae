@@ -1,8 +1,9 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getPropertyById } from '$lib/server/services/property-service';
+import { generateSEOMeta, generateStructuredData } from '$lib/server/services/seo-service';
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({ params, locals, url }) => {
 	const session = await locals.getSession();
 	const propertyId = params.id;
 
@@ -30,9 +31,16 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			}
 		}
 
+		// Generate SEO data
+		const baseUrl = `${url.protocol}//${url.host}`;
+		const seoMeta = generateSEOMeta(property, baseUrl);
+		const structuredData = generateStructuredData(property, baseUrl);
+
 		return {
 			property,
-			session
+			session,
+			seoMeta,
+			structuredData
 		};
 	} catch (err) {
 		console.error('Error loading property:', err);

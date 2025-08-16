@@ -29,6 +29,27 @@
       "when": 1755333397934,
       "tag": "0003_bouncy_legion",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1755341785735,
+      "tag": "0004_boring_shotgun",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1755351131523,
+      "tag": "0005_rare_tempest",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1755353095904,
+      "tag": "0006_green_cerise",
+      "breakpoints": true
     }
   ]
 }

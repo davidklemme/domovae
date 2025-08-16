@@ -1,0 +1,1 @@
+ALTER TABLE "owner_availability_windows" ADD COLUMN "is_recurring" boolean DEFAULT false;

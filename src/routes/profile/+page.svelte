@@ -3,6 +3,8 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
+	export let data;
+
 	let isEditing = false;
 	let formData = {
 		name: '',
@@ -261,6 +263,176 @@
 									</div>
 								</div>
 							</div>
+
+							<!-- Availability Management for Property Owners -->
+							{#if data.hasProperties}
+								<div class="mt-8 border-t border-gray-200 pt-6">
+									<h4 class="text-lg font-medium text-gray-900">Availability Management</h4>
+									<p class="mt-1 text-sm text-gray-500">
+										Manage your viewing availability for all properties.
+									</p>
+									<div class="mt-4">
+										<a
+											href="/availability/manage"
+											class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+										>
+											📅 Manage Availability
+										</a>
+									</div>
+								</div>
+							{/if}
+						</div>
+					</div>
+
+					<!-- Appointments Section -->
+					<div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+						<div class="space-y-6">
+							<!-- Buyer Appointments -->
+							{#if data.buyerAppointments && data.buyerAppointments.length > 0}
+								<div>
+									<h4 class="text-lg font-medium text-gray-900">My Viewing Requests</h4>
+									<p class="mt-1 text-sm text-gray-500">
+										Appointments you've requested as a buyer.
+									</p>
+									<div class="mt-4 space-y-4">
+										{#each data.buyerAppointments as appointment}
+											<div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
+												<div class="flex items-center justify-between">
+													<div class="flex-1">
+														<h5 class="font-medium text-gray-900">
+															{appointment.property?.title || 'Property'}
+														</h5>
+														<p class="text-sm text-gray-600">
+															{new Date(appointment.scheduledAt).toLocaleDateString('en-US', {
+																weekday: 'long',
+																year: 'numeric',
+																month: 'long',
+																day: 'numeric'
+															})} at {new Date(appointment.scheduledAt).toLocaleTimeString(
+																'en-US',
+																{
+																	hour: '2-digit',
+																	minute: '2-digit'
+																}
+															)}
+														</p>
+														<p class="text-sm text-gray-500">
+															Duration: {appointment.duration} minutes • Type: {appointment.type}
+														</p>
+														{#if appointment.notes}
+															<p class="mt-2 text-sm text-gray-600">
+																<strong>Notes:</strong>
+																{appointment.notes}
+															</p>
+														{/if}
+													</div>
+													<div class="ml-4">
+														<span
+															class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {appointment.status ===
+															'confirmed'
+																? 'bg-green-100 text-green-800'
+																: appointment.status === 'requested'
+																	? 'bg-yellow-100 text-yellow-800'
+																	: appointment.status === 'cancelled'
+																		? 'bg-red-100 text-red-800'
+																		: 'bg-gray-100 text-gray-800'}"
+														>
+															{appointment.status.charAt(0).toUpperCase() +
+																appointment.status.slice(1)}
+														</span>
+													</div>
+												</div>
+											</div>
+										{/each}
+									</div>
+								</div>
+							{/if}
+
+							<!-- Owner Appointments -->
+							{#if data.ownerAppointments && data.ownerAppointments.length > 0}
+								<div>
+									<h4 class="text-lg font-medium text-gray-900">Property Viewing Requests</h4>
+									<p class="mt-1 text-sm text-gray-500">
+										Appointments requested for your properties.
+									</p>
+									<div class="mt-4 space-y-4">
+										{#each data.ownerAppointments as appointment}
+											<div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
+												<div class="flex items-center justify-between">
+													<div class="flex-1">
+														<h5 class="font-medium text-gray-900">
+															{appointment.property?.title || 'Property'}
+														</h5>
+														<p class="text-sm text-gray-600">
+															Requested by: {appointment.buyer?.name ||
+																appointment.buyer?.email ||
+																'Unknown'}
+														</p>
+														<p class="text-sm text-gray-600">
+															{new Date(appointment.scheduledAt).toLocaleDateString('en-US', {
+																weekday: 'long',
+																year: 'numeric',
+																month: 'long',
+																day: 'numeric'
+															})} at {new Date(appointment.scheduledAt).toLocaleTimeString(
+																'en-US',
+																{
+																	hour: '2-digit',
+																	minute: '2-digit'
+																}
+															)}
+														</p>
+														<p class="text-sm text-gray-500">
+															Duration: {appointment.duration} minutes • Type: {appointment.type}
+														</p>
+														{#if appointment.notes}
+															<p class="mt-2 text-sm text-gray-600">
+																<strong>Notes:</strong>
+																{appointment.notes}
+															</p>
+														{/if}
+													</div>
+													<div class="ml-4">
+														<span
+															class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {appointment.status ===
+															'confirmed'
+																? 'bg-green-100 text-green-800'
+																: appointment.status === 'requested'
+																	? 'bg-yellow-100 text-yellow-800'
+																	: appointment.status === 'cancelled'
+																		? 'bg-red-100 text-red-800'
+																		: 'bg-gray-100 text-gray-800'}"
+														>
+															{appointment.status.charAt(0).toUpperCase() +
+																appointment.status.slice(1)}
+														</span>
+													</div>
+												</div>
+											</div>
+										{/each}
+									</div>
+								</div>
+							{/if}
+
+							<!-- No Appointments Message -->
+							{#if (!data.buyerAppointments || data.buyerAppointments.length === 0) && (!data.ownerAppointments || data.ownerAppointments.length === 0)}
+								<div class="py-8 text-center">
+									<div class="mb-4 text-6xl text-gray-400">📅</div>
+									<h4 class="text-lg font-medium text-gray-900">No Appointments Yet</h4>
+									<p class="mt-1 text-sm text-gray-500">
+										You haven't scheduled any viewings yet. Start by browsing properties and
+										requesting viewings.
+									</p>
+									<div class="mt-4">
+										<a
+											href="/properties"
+											class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+										>
+											Browse Properties
+										</a>
+									</div>
+								</div>
+							{/if}
 						</div>
 					</div>
 				</div>

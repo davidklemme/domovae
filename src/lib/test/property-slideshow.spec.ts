@@ -184,4 +184,44 @@ describe('Property Slideshow Functionality', () => {
 		expect(content).toContain('let isImageModalOpen = false');
 		expect(content).toContain('$: if (browser && isImageModalOpen)');
 	});
+
+	it('should have SEO optimization features (Feature 6.1)', async () => {
+		const propertyPagePath = join(process.cwd(), 'src/routes/properties/[id]/+page.svelte');
+		const propertyServerPath = join(process.cwd(), 'src/routes/properties/[id]/+page.server.ts');
+		const seoServicePath = join(process.cwd(), 'src/lib/server/services/seo-service.ts');
+		const content = await readFile(propertyPagePath, 'utf-8');
+		const serverContent = await readFile(propertyServerPath, 'utf-8');
+		const seoServiceContent = await readFile(seoServicePath, 'utf-8');
+
+		// Check for SEO meta tags in the page
+		expect(content).toContain('svelte:head');
+		expect(content).toContain('title');
+		expect(content).toContain('meta name="description"');
+		expect(content).toContain('meta property="og:title"');
+		expect(content).toContain('meta property="og:description"');
+		expect(content).toContain('meta property="og:image"');
+		expect(content).toContain('meta property="og:type"');
+		expect(content).toContain('meta name="twitter:card"');
+		expect(content).toContain('meta name="twitter:title"');
+		expect(content).toContain('meta name="twitter:description"');
+		expect(content).toContain('meta name="twitter:image"');
+
+		// Check for structured data in the page
+		expect(content).toContain('application/ld+json');
+		expect(content).toContain('JSON.stringify(data.structuredData)');
+
+		// Check for canonical URL
+		expect(content).toContain('rel="canonical"');
+
+		// Check for alt text on images
+		expect(content).toContain('alt=');
+
+		// Check server-side SEO data generation
+		expect(serverContent).toContain('generateSEOMeta');
+		expect(serverContent).toContain('generateStructuredData');
+
+		// Check SEO service implementation
+		expect(seoServiceContent).toContain("'@type': 'Offer'");
+		expect(seoServiceContent).toContain("'@type': 'SingleFamilyResidence'");
+	});
 });

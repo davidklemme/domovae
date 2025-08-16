@@ -188,7 +188,32 @@
 </script>
 
 <svelte:head>
-	<title>{property.title} - Domovae</title>
+	<title>{data.seoMeta.title}</title>
+	<meta name="description" content={data.seoMeta.description} />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content={data.seoMeta.type} />
+	<meta property="og:url" content={data.seoMeta.url} />
+	<meta property="og:title" content={data.seoMeta.title} />
+	<meta property="og:description" content={data.seoMeta.description} />
+	<meta property="og:image" content={data.seoMeta.image} />
+	<meta property="og:site_name" content="Domovae" />
+	<meta property="og:locale" content="de_DE" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:url" content={data.seoMeta.url} />
+	<meta name="twitter:title" content={data.seoMeta.title} />
+	<meta name="twitter:description" content={data.seoMeta.description} />
+	<meta name="twitter:image" content={data.seoMeta.image} />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href={data.seoMeta.url} />
+
+	<!-- Structured Data -->
+	<script type="application/ld+json">
+		{JSON.stringify(data.structuredData)}
+	</script>
 </svelte:head>
 
 <!-- Image Modal -->
@@ -200,7 +225,7 @@
 		<div class="relative max-h-[90vh] max-w-[90vw]">
 			<img
 				src={property.media[currentImageIndex].mediaUrl}
-				alt={property.title}
+				alt={data.seoMeta.title + ' - Photo ' + (currentImageIndex + 1)}
 				class="max-h-full max-w-full object-contain"
 				draggable="false"
 				oncontextmenu={(e) => e.preventDefault()}
@@ -370,7 +395,7 @@
 							<div class="relative aspect-[16/10] w-full">
 								<img
 									src={property.media[0].mediaUrl}
-									alt={property.title}
+									alt={data.seoMeta.title + ' - Main photo'}
 									class="h-full w-full cursor-pointer object-cover transition-transform hover:scale-105"
 									draggable="false"
 									oncontextmenu={preventDownload}
@@ -392,7 +417,7 @@
 								<div class="relative col-span-7 aspect-[16/10] overflow-hidden rounded-lg">
 									<img
 										src={property.media[0].mediaUrl}
-										alt={property.title}
+										alt={data.seoMeta.title + ' - Main photo'}
 										class="h-full w-full cursor-pointer object-cover transition-transform hover:scale-105"
 										draggable="false"
 										oncontextmenu={preventDownload}
@@ -414,7 +439,7 @@
 										<div class="relative aspect-square overflow-hidden rounded-lg">
 											<img
 												src={property.media[index + 1].mediaUrl}
-												alt={property.title}
+												alt={data.seoMeta.title + ' - Photo ' + (index + 2)}
 												class="h-full w-full cursor-pointer object-cover transition-transform hover:scale-105"
 												draggable="false"
 												oncontextmenu={preventDownload}
@@ -464,7 +489,7 @@
 											>
 												<img
 													src={property.media[index].mediaUrl}
-													alt="Photo {index + 1}"
+													alt={data.seoMeta.title + ' - Photo ' + (index + 1)}
 													class="h-20 w-32 object-cover"
 													draggable="false"
 													oncontextmenu={preventDownload}
