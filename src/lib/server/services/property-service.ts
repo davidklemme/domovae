@@ -183,12 +183,12 @@ export const updateProperty = async (
 			await db
 				.update(propertyLocations)
 				.set({
-					street: propertyData.address || '',
-					city: propertyData.city || '',
-					postalCode: propertyData.postalCode || '',
-					country: propertyData.country || 'Germany',
-					latitude: propertyData.latitude,
-					longitude: propertyData.longitude,
+					street: (propertyData.address as string) || '',
+					city: (propertyData.city as string) || '',
+					postalCode: (propertyData.postalCode as string) || '',
+					country: (propertyData.country as string) || 'Germany',
+					latitude: propertyData.latitude as string,
+					longitude: propertyData.longitude as string,
 					updatedAt: new Date()
 				})
 				.where(eq(propertyLocations.propertyId, propertyId));
