@@ -131,7 +131,9 @@ export const getPropertyQuestions = async (propertyId: number, session?: Session
 	// Filter questions based on user permissions
 	if (!viewerId) {
 		// Non-authenticated users only see published Q&As
-		return questions.filter((q) => q.status === 'published' && q.answers.some((a) => a.isPublished));
+		return questions.filter(
+			(q) => q.status === 'published' && q.answers.some((a) => a.isPublished)
+		);
 	}
 
 	if (isOwner || isAdmin) {

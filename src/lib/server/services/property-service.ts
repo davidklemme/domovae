@@ -130,7 +130,10 @@ export const updateProperty = async (
 		throw new Error('Property not found');
 	}
 
-	if (existingProperty.ownerId !== session.user.id && (session.user as { role?: string }).role !== 'admin') {
+	if (
+		existingProperty.ownerId !== session.user.id &&
+		(session.user as { role?: string }).role !== 'admin'
+	) {
 		throw new Error('Forbidden: You can only edit your own properties');
 	}
 
@@ -227,7 +230,10 @@ export const archiveProperty = async (propertyId: number, session: Session) => {
 		throw new Error('Property not found');
 	}
 
-	if (existingProperty.ownerId !== session.user.id && (session.user as { role?: string }).role !== 'admin') {
+	if (
+		existingProperty.ownerId !== session.user.id &&
+		(session.user as { role?: string }).role !== 'admin'
+	) {
 		throw new Error('Forbidden: You can only delete your own properties');
 	}
 

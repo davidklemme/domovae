@@ -99,7 +99,7 @@ export const POST: RequestHandler = async ({ params, request, locals }) => {
 			media: uploadedMedia,
 			message: `Successfully uploaded ${uploadedMedia.length} files`
 		});
-	} catch (error) {
+	} catch {
 		console.error('Error uploading media');
 		return json({ error: 'Failed to upload media' }, { status: 500 });
 	}
@@ -148,13 +148,15 @@ export const DELETE: RequestHandler = async ({ params, request, locals }) => {
 		}
 
 		// Delete from database
-		await db.delete(propertyMedia).where(and(eq(propertyMedia.id, Number(mediaId)), eq(propertyMedia.propertyId, propertyId)));
+		await db
+			.delete(propertyMedia)
+			.where(and(eq(propertyMedia.id, Number(mediaId)), eq(propertyMedia.propertyId, propertyId)));
 
 		return json({
 			success: true,
 			message: 'Media deleted successfully'
 		});
-	} catch (error) {
+	} catch {
 		console.error('Error deleting media');
 		return json({ error: 'Failed to delete media' }, { status: 500 });
 	}

@@ -37,7 +37,7 @@ export default function ResendProvider(config: { from: string }): Provider {
 				await resend.emails.send(emailData);
 				// Minimal non-PII log
 				console.info('Verification email dispatched');
-			} catch (error) {
+			} catch {
 				console.error('Error sending verification email');
 				throw new Error('Failed to send verification email');
 			}

@@ -9,7 +9,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 	adapter: DrizzleAdapter(db),
 	providers: [
 		ResendProvider({
-			from: env.EMAIL_FROM
+			from: env.EMAIL_FROM ?? 'noreply@example.com'
 		})
 	],
 	trustHost: env.AUTH_TRUST_HOST === 'true',

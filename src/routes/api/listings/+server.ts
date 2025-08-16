@@ -55,7 +55,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				}
 			}
 		);
-	} catch (error) {
+	} catch {
 		console.error('Error generating listings feed');
 		return json({ error: 'Failed to generate listings feed' }, { status: 500 });
 	}

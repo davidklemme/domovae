@@ -47,20 +47,20 @@ export const GET: RequestHandler = async ({ url }) => {
   
   <!-- Individual property pages -->
   ${liveProperties
-			.map((property) => {
-				const propertyUrl = `${baseUrl}/properties/${property.id}`;
-				const lastmod = property.updatedAt
-					? new Date(property.updatedAt).toISOString()
-					: new Date().toISOString();
+		.map((property) => {
+			const propertyUrl = `${baseUrl}/properties/${property.id}`;
+			const lastmod = property.updatedAt
+				? new Date(property.updatedAt).toISOString()
+				: new Date().toISOString();
 
-				return `  <url>
+			return `  <url>
     <loc>${escapeXml(propertyUrl)}</loc>
     <lastmod>${escapeXml(lastmod)}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`;
-			})
-			.join('\n')}
+		})
+		.join('\n')}
 </urlset>`;
 
 		return new Response(sitemap, {
@@ -69,7 +69,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				'Cache-Control': 'public, max-age=3600' // Cache for 1 hour
 			}
 		});
-	} catch (error) {
+	} catch {
 		console.error('Error generating sitemap');
 		return new Response('Error generating sitemap', { status: 500 });
 	}
