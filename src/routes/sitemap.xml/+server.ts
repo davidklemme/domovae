@@ -4,6 +4,15 @@ import { db } from '$lib/server/db';
 import { properties } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 
+function escapeXml(input: string): string {
+	return input
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&apos;');
+}
+
 export const GET: RequestHandler = async ({ url }) => {
 	try {
 		// Get all live properties
@@ -24,14 +33,14 @@ export const GET: RequestHandler = async ({ url }) => {
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <!-- Homepage -->
   <url>
-    <loc>${baseUrl}</loc>
+    <loc>${escapeXml(baseUrl)}</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   
   <!-- Properties listing page -->
   <url>
-    <loc>${baseUrl}/properties</loc>
+    <loc>${escapeXml(baseUrl + '/properties')}</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -45,8 +54,8 @@ export const GET: RequestHandler = async ({ url }) => {
 				: new Date().toISOString();
 
 			return `  <url>
-    <loc>${propertyUrl}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <loc>${escapeXml(propertyUrl)}</loc>
+    <lastmod>${escapeXml(lastmod)}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`;
@@ -60,8 +69,8 @@ export const GET: RequestHandler = async ({ url }) => {
 				'Cache-Control': 'public, max-age=3600' // Cache for 1 hour
 			}
 		});
-	} catch (error) {
-		console.error('Error generating sitemap:', error);
+	} catch {
+		console.error('Error generating sitemap');
 		return new Response('Error generating sitemap', { status: 500 });
 	}
 };

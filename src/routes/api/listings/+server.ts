@@ -4,6 +4,11 @@ import { db } from '$lib/server/db';
 import { properties } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 
+function stripHtml(input: string | null): string | null {
+	if (!input) return input;
+	return input.replace(/<[^>]*>/g, '');
+}
+
 export const GET: RequestHandler = async ({ url }) => {
 	try {
 		// Get all live properties with essential data
@@ -27,7 +32,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		const listings = liveProperties.map((property) => ({
 			id: property.id,
 			title: property.title,
-			description: property.description,
+			description: stripHtml(property.description) || undefined,
 			price: property.price,
 			url: `${baseUrl}/properties/${property.id}`,
 			createdAt: property.createdAt,
@@ -50,8 +55,8 @@ export const GET: RequestHandler = async ({ url }) => {
 				}
 			}
 		);
-	} catch (error) {
-		console.error('Error generating listings feed:', error);
+	} catch {
+		console.error('Error generating listings feed');
 		return json({ error: 'Failed to generate listings feed' }, { status: 500 });
 	}
 };

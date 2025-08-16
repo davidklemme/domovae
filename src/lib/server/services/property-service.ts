@@ -45,10 +45,10 @@ export const validatePropertyData = (data: any): string[] => {
 	return errors;
 };
 
-// Generic check function that always returns true for now
-export const canCreateProperty = (): boolean => {
-	// TODO: Add validation logic here (e.g., role checks, limits, etc.)
-	return true;
+// Enforce role-based permission for creation
+export const canCreateProperty = (session: Session): boolean => {
+	const role = (session.user as { role?: string }).role;
+	return role === 'owner' || role === 'admin';
 };
 
 // Property creation function
@@ -59,7 +59,7 @@ export const createProperty = async (propertyData: CreatePropertyData, session: 
 	}
 
 	// Check if user can create properties
-	if (!canCreateProperty()) {
+	if (!canCreateProperty(session)) {
 		throw new Error('Forbidden: You cannot create properties');
 	}
 
@@ -130,7 +130,10 @@ export const updateProperty = async (
 		throw new Error('Property not found');
 	}
 
-	if (existingProperty.ownerId !== session.user.id && session.user.role !== 'admin') {
+	if (
+		existingProperty.ownerId !== session.user.id &&
+		(session.user as { role?: string }).role !== 'admin'
+	) {
 		throw new Error('Forbidden: You can only edit your own properties');
 	}
 
@@ -227,7 +230,10 @@ export const archiveProperty = async (propertyId: number, session: Session) => {
 		throw new Error('Property not found');
 	}
 
-	if (existingProperty.ownerId !== session.user.id && session.user.role !== 'admin') {
+	if (
+		existingProperty.ownerId !== session.user.id &&
+		(session.user as { role?: string }).role !== 'admin'
+	) {
 		throw new Error('Forbidden: You can only delete your own properties');
 	}
 

@@ -13,6 +13,10 @@ import {
 	getOwnerQuestions
 } from '$lib/server/services/qa-service';
 
+// Only run this suite when explicitly enabled
+const runDbTests = process.env.RUN_DB_TESTS === 'true';
+const describeDb = runDbTests ? describe : describe.skip;
+
 // Mock session for testing
 const mockSession = {
 	user: {
@@ -34,7 +38,7 @@ const mockOwnerSession = {
 	expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
 };
 
-describe('Q&A System', () => {
+describeDb('Q&A System', () => {
 	let testPropertyId: number;
 	let testQuestionId: number;
 	let testAnswerId: number;

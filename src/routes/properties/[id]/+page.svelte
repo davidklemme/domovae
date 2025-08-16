@@ -6,6 +6,7 @@
 	import PropertyQA from '$lib/components/PropertyQA.svelte';
 	import ScheduleAction from '$lib/components/ScheduleAction.svelte';
 	import { marked } from 'marked';
+	import DOMPurify from 'isomorphic-dompurify';
 
 	export let data: PageData;
 
@@ -24,7 +25,8 @@
 		if (!text) return '';
 		try {
 			const result = marked(text);
-			return typeof result === 'string' ? result : String(result);
+			const html = typeof result === 'string' ? result : String(result);
+			return DOMPurify.sanitize(html);
 		} catch (error) {
 			console.error('Error rendering markdown:', error);
 			return text; // Fallback to plain text
