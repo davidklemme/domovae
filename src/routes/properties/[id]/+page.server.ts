@@ -33,8 +33,10 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 
 		// Generate SEO data
 		const baseUrl = `${url.protocol}//${url.host}`;
-		const seoMeta = generateSEOMeta(property, baseUrl);
-		const structuredData = generateStructuredData(property, baseUrl);
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const seoMeta = generateSEOMeta(property as any, baseUrl);
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const structuredData = generateStructuredData(property as any, baseUrl);
 
 		return {
 			property,

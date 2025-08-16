@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
 	export let data;
@@ -15,15 +13,17 @@
 		endTime: '17:00',
 		slotDuration: 30,
 		notes: '',
-		timezone: 'Europe/Berlin',
+		timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 		isRecurring: false
 	};
 
 	// Set default date to tomorrow
 	onMount(() => {
-		const tomorrow = new Date();
-		tomorrow.setDate(tomorrow.getDate() + 1);
+		const baseDate = new Date();
+		const tomorrow = new Date(baseDate.getTime() + 24 * 60 * 60 * 1000);
 		formData.date = tomorrow.toISOString().split('T')[0];
+		// Ensure timezone is set to browser timezone
+		formData.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 	});
 
 	function formatDate(dateString: string) {
@@ -50,15 +50,15 @@
 	function handleCancel() {
 		showAddForm = false;
 		// Reset form
-		const tomorrow = new Date();
-		tomorrow.setDate(tomorrow.getDate() + 1);
+		const baseDate = new Date();
+		const tomorrow = new Date(baseDate.getTime() + 24 * 60 * 60 * 1000);
 		formData = {
 			date: tomorrow.toISOString().split('T')[0],
 			startTime: '09:00',
 			endTime: '17:00',
 			slotDuration: 30,
 			notes: '',
-			timezone: 'Europe/Berlin',
+			timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 			isRecurring: false
 		};
 	}
@@ -93,6 +93,10 @@
 					<div>
 						<h1 class="text-3xl font-bold text-gray-900">Manage Availability</h1>
 						<p class="mt-2 text-gray-600">Set when you're available for property viewings</p>
+						<p class="mt-1 text-sm text-gray-500">
+							Times will be automatically converted to each user's timezone when they book
+							appointments
+						</p>
 					</div>
 					<button
 						on:click={handleAddWindow}
@@ -141,8 +145,8 @@
 									messageType = 'success';
 									showAddForm = false;
 									// Reset form
-									const tomorrow = new Date();
-									tomorrow.setDate(tomorrow.getDate() + 1);
+									const baseDate = new Date();
+									const tomorrow = new Date(baseDate.getTime() + 24 * 60 * 60 * 1000);
 									formData.date = tomorrow.toISOString().split('T')[0];
 									formData.startTime = '09:00';
 									formData.endTime = '17:00';
@@ -232,10 +236,15 @@
 									bind:value={formData.timezone}
 									class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
 								>
+									<option value={Intl.DateTimeFormat().resolvedOptions().timeZone}>
+										{Intl.DateTimeFormat().resolvedOptions().timeZone} (Your timezone)
+									</option>
 									<option value="Europe/Berlin">Europe/Berlin</option>
 									<option value="Europe/London">Europe/London</option>
 									<option value="America/New_York">America/New_York</option>
 									<option value="America/Los_Angeles">America/Los_Angeles</option>
+									<option value="Asia/Tokyo">Asia/Tokyo</option>
+									<option value="Australia/Sydney">Australia/Sydney</option>
 								</select>
 							</div>
 
@@ -295,7 +304,7 @@
 
 					{#if data.availabilityWindows && data.availabilityWindows.length > 0}
 						<div class="space-y-4">
-							{#each data.availabilityWindows as window}
+							{#each data.availabilityWindows as window (window.id)}
 								<div
 									class="flex items-center justify-between rounded-lg border border-gray-200 p-4"
 								>

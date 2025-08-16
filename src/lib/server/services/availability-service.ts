@@ -109,7 +109,8 @@ export class AvailabilityService {
 				timeSlots.push({
 					startTime: slot.startTime,
 					endTime: slot.endTime,
-					isAvailable: !isBooked
+					isAvailable: !isBooked,
+					timezone: window.timezone || 'Europe/Berlin'
 				});
 			}
 		}

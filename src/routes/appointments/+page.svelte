@@ -2,14 +2,13 @@
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
-	import type { AppointmentWithRelations } from '$lib/types/appointment';
 
 	export let data: PageData;
-	export let form: any;
+	export let form: unknown;
 
 	let activeTab = data.role;
 	let showNotesModal = false;
-	let selectedAppointment: AppointmentWithRelations | null = null;
+	let selectedAppointment: { ownerNotes?: string | null; buyerNotes?: string | null } | null = null;
 	let notes = '';
 
 	function formatPrice(price: number) {
@@ -19,8 +18,9 @@
 		}).format(price);
 	}
 
-	function formatDate(dateString: string) {
-		return new Date(dateString).toLocaleDateString('en-US', {
+	function formatDate(dateInput: string | Date) {
+		const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+		return date.toLocaleDateString('en-US', {
 			weekday: 'short',
 			year: 'numeric',
 			month: 'short',
@@ -28,15 +28,16 @@
 		});
 	}
 
-	function formatTime(dateString: string) {
-		return new Date(dateString).toLocaleTimeString('en-US', {
+	function formatTime(dateInput: string | Date) {
+		const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+		return date.toLocaleTimeString('en-US', {
 			hour: 'numeric',
 			minute: '2-digit',
 			hour12: true
 		});
 	}
 
-	function getStatusColor(status: string) {
+	function getStatusColor(status: string | null) {
 		switch (status) {
 			case 'requested':
 				return 'bg-yellow-100 text-yellow-800';
@@ -53,7 +54,7 @@
 		}
 	}
 
-	function getStatusLabel(status: string) {
+	function getStatusLabel(status: string | null) {
 		switch (status) {
 			case 'requested':
 				return 'Pending';
@@ -66,11 +67,11 @@
 			case 'no_show':
 				return 'No Show';
 			default:
-				return status;
+				return status || 'Unknown';
 		}
 	}
 
-	function openNotesModal(appointment: AppointmentWithRelations) {
+	function openNotesModal(appointment: { ownerNotes?: string | null; buyerNotes?: string | null }) {
 		selectedAppointment = appointment;
 		notes = appointment.ownerNotes || appointment.buyerNotes || '';
 		showNotesModal = true;
@@ -87,18 +88,18 @@
 		goto(`/appointments?role=${tab}`);
 	}
 
-	function canManageAppointment(appointment: AppointmentWithRelations) {
+	function _canManageAppointment(appointment: { ownerId: string; buyerId: string }) {
 		if (activeTab === 'owner') {
 			return appointment.ownerId === data.user.id;
 		}
 		return appointment.buyerId === data.user.id;
 	}
 
-	function canUpdateStatus(appointment: AppointmentWithRelations) {
+	function canUpdateStatus(appointment: { ownerId: string }) {
 		return activeTab === 'owner' && appointment.ownerId === data.user.id;
 	}
 
-	function canDeleteAppointment(appointment: AppointmentWithRelations) {
+	function canDeleteAppointment(appointment: { buyerId: string; status: string | null }) {
 		return (
 			activeTab === 'buyer' &&
 			appointment.buyerId === data.user.id &&
@@ -225,8 +226,8 @@
 										</p>
 
 										<div class="mb-3 flex items-center space-x-4 text-sm text-gray-500">
-											<span>📅 {formatDate(appointment.scheduledAt)}</span>
-											<span>🕐 {formatTime(appointment.scheduledAt)}</span>
+											<span>📅 {formatDate(appointment.scheduledAt.toString())}</span>
+											<span>🕐 {formatTime(appointment.scheduledAt.toString())}</span>
 											<span>⏱️ {appointment.duration} minutes</span>
 											<span>💰 {formatPrice(appointment.property?.price || 0)}</span>
 										</div>

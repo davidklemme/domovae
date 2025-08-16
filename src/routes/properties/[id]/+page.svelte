@@ -211,6 +211,7 @@
 	<link rel="canonical" href={data.seoMeta.url} />
 
 	<!-- Structured Data -->
+	<!-- prettier-ignore -->
 	<script type="application/ld+json">
 		{JSON.stringify(data.structuredData)}
 	</script>

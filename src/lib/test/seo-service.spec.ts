@@ -82,8 +82,10 @@ describe('SEO Service', () => {
 			expect(propertySchema['@type']).toBe('SingleFamilyResidence');
 			expect(propertySchema.name).toBe(mockProperty.title);
 			expect(propertySchema.numberOfRooms).toBe(2);
-			expect(propertySchema.floorSize.value).toBe(85);
-			expect(propertySchema.address.addressLocality).toBe('Berlin');
+			expect((propertySchema.floorSize as { value: number }).value).toBe(85);
+			expect((propertySchema.address as { addressLocality: string }).addressLocality).toBe(
+				'Berlin'
+			);
 		});
 
 		it('should generate offer schema', () => {
@@ -101,9 +103,11 @@ describe('SEO Service', () => {
 			const breadcrumbSchema = structuredData[2];
 
 			expect(breadcrumbSchema['@type']).toBe('BreadcrumbList');
-			expect(breadcrumbSchema.itemListElement).toHaveLength(4);
-			expect(breadcrumbSchema.itemListElement[0].name).toBe('Home');
-			expect(breadcrumbSchema.itemListElement[3].name).toBe(mockProperty.title);
+			expect(breadcrumbSchema.itemListElement as Array<{ name: string }>).toHaveLength(4);
+			expect((breadcrumbSchema.itemListElement as Array<{ name: string }>)[0].name).toBe('Home');
+			expect((breadcrumbSchema.itemListElement as Array<{ name: string }>)[3].name).toBe(
+				mockProperty.title
+			);
 		});
 	});
 

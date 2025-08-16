@@ -86,3 +86,64 @@ export interface PropertyWithLocation {
 		mediaCategory: string;
 	}>;
 }
+
+// Buyer Profile Types
+export type EquityBand = 'lt10' | 'b10_30' | 'b30_50' | 'gt50';
+export type PurchaseTimeline = 'immediate' | 'lt3m' | 'lt6m' | 'gt6m';
+export type PurchasePurpose = 'eigennutzung' | 'kapitalanlage';
+
+export interface BuyerProfile {
+	id: number;
+	userId: string;
+	equityBand: EquityBand;
+	timeline: PurchaseTimeline;
+	purpose: PurchasePurpose;
+	householdSize?: number;
+	schufaAvailable: boolean;
+	financingDocUrl?: string;
+	financingVerified: boolean;
+	consentTimestamp: Date;
+	retentionUntil: Date;
+	createdAt: Date;
+	updatedAt: Date;
+}
+
+export interface CreateBuyerProfileData {
+	equityBand: EquityBand;
+	timeline: PurchaseTimeline;
+	purpose: PurchasePurpose;
+	householdSize?: number;
+	schufaAvailable: boolean;
+	financingDoc?: File;
+	consentGiven: boolean;
+}
+
+export interface UpdateBuyerProfileData {
+	equityBand?: EquityBand;
+	timeline?: PurchaseTimeline;
+	purpose?: PurchasePurpose;
+	householdSize?: number;
+	schufaAvailable?: boolean;
+	financingDoc?: File;
+	consentGiven?: boolean;
+}
+
+export interface BuyerProfileSnapshot {
+	equityBand: EquityBand;
+	timeline: PurchaseTimeline;
+	purpose: PurchasePurpose;
+	householdSize?: number;
+	schufaAvailable: boolean;
+	financingVerified: boolean;
+	snapshotDate: Date;
+}
+
+// Trust Badge Types
+export interface TrustBadge {
+	type: 'financing' | 'equity' | 'timeline' | 'purpose' | 'schufa';
+	label: string;
+	description: string;
+	icon: string;
+	color: string;
+	value: string;
+}

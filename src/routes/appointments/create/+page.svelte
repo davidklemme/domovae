@@ -5,7 +5,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	export let form: any;
+	export let form: { success?: boolean; error?: string } | undefined;
 
 	let selectedDate = '';
 	let selectedTime = '';
@@ -13,16 +13,45 @@
 	let selectedType = 'viewing';
 	let notes = '';
 	let isLoading = false;
-	let availableTimeSlots: Array<{ startTime: string; endTime: string; isAvailable: boolean }> = [];
+	let availableTimeSlots: Array<{
+		startTime: string;
+		endTime: string;
+		isAvailable: boolean;
+		timezone?: string;
+	}> = [];
 	let loadingSlots = false;
 	let availableDates: string[] = [];
 	let loadingDates = false;
 
+	// Function to format time in user's timezone
+	function formatTimeInUserTimezone(
+		timeString: string,
+		dateString: string,
+		_ownerTimezone: string = 'Europe/Berlin'
+	): string {
+		try {
+			// Create a date object with the time in the owner's timezone
+			const dateTimeString = `${dateString}T${timeString}:00`;
+			const date = new Date(dateTimeString);
+
+			// Format the time in the user's local timezone
+			return date.toLocaleTimeString('en-US', {
+				hour: 'numeric',
+				minute: '2-digit',
+				hour12: true,
+				timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+			});
+		} catch (error) {
+			console.error('Error formatting time:', error);
+			return timeString; // Fallback to original time string
+		}
+	}
+
 	// Generate date range (next 30 days)
 	const generateDateRange = () => {
+		const baseDate = new Date();
 		const dates = Array.from({ length: 30 }, (_, i) => {
-			const date = new Date();
-			date.setDate(date.getDate() + i + 1); // Start from tomorrow
+			const date = new Date(baseDate.getTime() + (i + 1) * 24 * 60 * 60 * 1000); // Start from tomorrow
 			return date.toISOString().split('T')[0];
 		});
 		return dates;
@@ -112,7 +141,7 @@
 		}).format(price);
 	}
 
-	function handleSubmit() {
+	function _handleSubmit() {
 		if (!selectedDate || !selectedTime) {
 			alert('Please select a date and time');
 			return;
@@ -219,7 +248,7 @@
 							class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-blue-500 focus:outline-none"
 						>
 							<option value="">Choose a date</option>
-							{#each availableDates as date}
+							{#each availableDates as date (date)}
 								<option value={date}>
 									{new Date(date).toLocaleDateString('en-US', {
 										weekday: 'long',
@@ -263,9 +292,9 @@
 							class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-blue-500 focus:outline-none"
 						>
 							<option value="">Choose a time</option>
-							{#each availableTimeSlots.filter((slot) => slot.isAvailable) as slot}
+							{#each availableTimeSlots.filter((slot) => slot.isAvailable) as slot (slot.startTime)}
 								<option value={slot.startTime}>
-									{slot.startTime}
+									{formatTimeInUserTimezone(slot.startTime, selectedDate, slot.timezone)}
 								</option>
 							{/each}
 						</select>
@@ -274,7 +303,7 @@
 					{#if selectedDate && availableTimeSlots.filter((slot) => slot.isAvailable).length > 0}
 						<p class="mt-1 text-sm text-gray-500">
 							Showing {availableTimeSlots.filter((slot) => slot.isAvailable).length} available starting
-							times
+							times (in your timezone: {Intl.DateTimeFormat().resolvedOptions().timeZone})
 						</p>
 					{/if}
 				</div>
@@ -288,7 +317,7 @@
 						bind:value={selectedDuration}
 						class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-blue-500 focus:outline-none"
 					>
-						{#each durationOptions as option}
+						{#each durationOptions as option (option.value)}
 							<option value={option.value}>{option.label}</option>
 						{/each}
 					</select>
@@ -305,7 +334,7 @@
 						bind:value={selectedType}
 						class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-blue-500 focus:outline-none"
 					>
-						{#each typeOptions as option}
+						{#each typeOptions as option (option.value)}
 							<option value={option.value}>{option.label}</option>
 						{/each}
 					</select>
@@ -324,6 +353,30 @@
 						placeholder="Any special requests or questions for the property owner..."
 						class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-blue-500 focus:outline-none"
 					></textarea>
+				</div>
+
+				<!-- Buyer Profile Notice -->
+				<div class="rounded-lg bg-blue-50 p-4">
+					<div class="flex items-start space-x-3">
+						<div class="flex-shrink-0">
+							<span class="text-blue-600">💡</span>
+						</div>
+						<div class="flex-1">
+							<h4 class="text-sm font-medium text-blue-900">Buyer-Profil</h4>
+							<p class="mt-1 text-sm text-blue-800">
+								Update your profile to show sellers that you are serious and get faster responses.
+								Your profile will be automatically linked to this request.
+							</p>
+							<div class="mt-3">
+								<a
+									href="/profile"
+									class="text-sm font-medium text-blue-600 underline hover:text-blue-500"
+								>
+									Update relevant buyer information in your profile →
+								</a>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<!-- Hidden field for scheduledAt -->

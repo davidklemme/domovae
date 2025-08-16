@@ -14,8 +14,6 @@ export const GET: RequestHandler = async ({ url }) => {
 				description: properties.description,
 				price: properties.price,
 				status: properties.status,
-				location: properties.location,
-				attributes: properties.attributes,
 				createdAt: properties.createdAt,
 				updatedAt: properties.updatedAt
 			})
@@ -31,8 +29,6 @@ export const GET: RequestHandler = async ({ url }) => {
 			title: property.title,
 			description: property.description,
 			price: property.price,
-			location: property.location,
-			attributes: property.attributes,
 			url: `${baseUrl}/properties/${property.id}`,
 			createdAt: property.createdAt,
 			updatedAt: property.updatedAt

@@ -2,6 +2,7 @@ import { db } from '../db';
 import { appointments, properties } from '../db/schema';
 import { eq, and, gte, lte, desc, asc } from 'drizzle-orm';
 import type { NewAppointment, AppointmentStatus } from '../../types/appointment';
+import { BuyerProfileService } from './buyer-profile-service';
 
 export class AppointmentService {
 	/**
@@ -33,11 +34,17 @@ export class AppointmentService {
 				throw new Error('Time slot is not available');
 			}
 
+			// Create buyer profile snapshot
+			const buyerProfileSnapshot = await BuyerProfileService.createSnapshot(
+				appointmentData.buyerId
+			);
+
 			// Create the appointment
 			const [newAppointment] = await db
 				.insert(appointments)
 				.values({
 					...appointmentData,
+					buyerProfileSnapshot: buyerProfileSnapshot ? JSON.stringify(buyerProfileSnapshot) : null,
 					status: 'requested',
 					createdAt: new Date(),
 					updatedAt: new Date()

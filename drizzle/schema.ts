@@ -291,6 +291,7 @@ export const appointments = pgTable("appointments", {
 	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
 	confirmedAt: timestamp("confirmed_at", { mode: 'string' }),
 	cancelledAt: timestamp("cancelled_at", { mode: 'string' }),
+	buyerProfileSnapshot: jsonb("buyer_profile_snapshot"),
 }, (table) => [
 	foreignKey({
 			columns: [table.propertyId],
@@ -309,6 +310,28 @@ export const appointments = pgTable("appointments", {
 		}).onDelete("cascade"),
 ]);
 
+export const buyerProfile = pgTable("buyer_profile", {
+	id: serial().primaryKey().notNull(),
+	userId: text("user_id").notNull(),
+	equityBand: varchar("equity_band", { length: 20 }).notNull(),
+	timeline: varchar({ length: 20 }).notNull(),
+	purpose: varchar({ length: 20 }).notNull(),
+	householdSize: integer("household_size"),
+	schufaAvailable: boolean("schufa_available").default(false),
+	financingDocUrl: varchar("financing_doc_url", { length: 500 }),
+	financingVerified: boolean("financing_verified").default(false),
+	consentTimestamp: timestamp("consent_timestamp", { mode: 'string' }).notNull(),
+	retentionUntil: timestamp("retention_until", { mode: 'string' }).notNull(),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	foreignKey({
+			columns: [table.userId],
+			foreignColumns: [user.id],
+			name: "buyer_profile_user_id_user_id_fk"
+		}).onDelete("cascade"),
+]);
+
 export const ownerAvailabilityWindows = pgTable("owner_availability_windows", {
 	id: serial().primaryKey().notNull(),
 	ownerId: text("owner_id").notNull(),
@@ -321,6 +344,7 @@ export const ownerAvailabilityWindows = pgTable("owner_availability_windows", {
 	notes: text(),
 	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
 	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+	isRecurring: boolean("is_recurring").default(false),
 }, (table) => [
 	foreignKey({
 			columns: [table.ownerId],

@@ -492,6 +492,9 @@ export const appointments = pgTable('appointments', {
 	buyerNotes: text('buyer_notes'),
 	ownerNotes: text('owner_notes'),
 
+	// Buyer profile snapshot (denormalized for badges at inquiry time)
+	buyerProfileSnapshot: jsonb('buyer_profile_snapshot'),
+
 	// Calendar integration
 	externalCalendarId: varchar('external_calendar_id', { length: 255 }),
 	externalEventId: varchar('external_event_id', { length: 255 }),
@@ -549,6 +552,39 @@ export const ownerAvailabilityWindows = pgTable('owner_availability_windows', {
 export const ownerAvailabilityWindowsRelations = relations(ownerAvailabilityWindows, ({ one }) => ({
 	owner: one(users, {
 		fields: [ownerAvailabilityWindows.ownerId],
+		references: [users.id]
+	})
+}));
+
+// Buyer Profile Table
+export const buyerProfile = pgTable('buyer_profile', {
+	id: serial('id').primaryKey(),
+	userId: text('user_id')
+		.references(() => users.id, { onDelete: 'cascade' })
+		.notNull(),
+
+	// Profile details
+	equityBand: varchar('equity_band', { length: 20 }).notNull(), // lt10, b10_30, b30_50, gt50
+	timeline: varchar('timeline', { length: 20 }).notNull(), // immediate, lt3m, lt6m, gt6m
+	purpose: varchar('purpose', { length: 20 }).notNull(), // eigennutzung, kapitalanlage
+	householdSize: integer('household_size'),
+	schufaAvailable: boolean('schufa_available').default(false),
+	financingDocUrl: varchar('financing_doc_url', { length: 500 }),
+	financingVerified: boolean('financing_verified').default(false),
+
+	// Privacy & consent
+	consentTimestamp: timestamp('consent_timestamp').notNull(),
+	retentionUntil: timestamp('retention_until').notNull(),
+
+	// Timestamps
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow()
+});
+
+// Buyer Profile Relations
+export const buyerProfileRelations = relations(buyerProfile, ({ one }) => ({
+	user: one(users, {
+		fields: [buyerProfile.userId],
 		references: [users.id]
 	})
 }));

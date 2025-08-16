@@ -21,6 +21,7 @@ export interface TimeSlot {
 	endTime: string; // HH:MM format
 	isAvailable: boolean;
 	appointmentId?: number; // if booked
+	timezone?: string; // timezone of the availability window
 }
 
 // Calendar Export Types

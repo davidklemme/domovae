@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { user, properties, account, auditLogs, consentRecords, dataSubjectRequests, propertyAmenities, amenities, propertyLocations, proximities, session, propertyMedia, appointments, ownerAvailabilityWindows, propertyQuestions, propertyAnswers } from "./schema";
+import { user, properties, account, auditLogs, consentRecords, dataSubjectRequests, propertyAmenities, amenities, propertyLocations, proximities, session, propertyMedia, appointments, buyerProfile, ownerAvailabilityWindows, propertyQuestions, propertyAnswers } from "./schema";
 
 export const propertiesRelations = relations(properties, ({one, many}) => ({
 	user: one(user, {
@@ -32,6 +32,7 @@ export const userRelations = relations(user, ({many}) => ({
 	appointments_ownerId: many(appointments, {
 		relationName: "appointments_ownerId_user_id"
 	}),
+	buyerProfiles: many(buyerProfile),
 	ownerAvailabilityWindows: many(ownerAvailabilityWindows),
 	propertyQuestions: many(propertyQuestions),
 	propertyAnswers: many(propertyAnswers),
@@ -128,6 +129,13 @@ export const appointmentsRelations = relations(appointments, ({one}) => ({
 		fields: [appointments.ownerId],
 		references: [user.id],
 		relationName: "appointments_ownerId_user_id"
+	}),
+}));
+
+export const buyerProfileRelations = relations(buyerProfile, ({one}) => ({
+	user: one(user, {
+		fields: [buyerProfile.userId],
+		references: [user.id]
 	}),
 }));
 
