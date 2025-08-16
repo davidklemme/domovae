@@ -12,6 +12,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 			from: env.EMAIL_FROM
 		})
 	],
+	trustHost: env.AUTH_TRUST_HOST === 'true',
 	callbacks: {
 		async session({ session, token }) {
 			if (session.user && token) {
