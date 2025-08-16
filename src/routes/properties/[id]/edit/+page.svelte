@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 	import MediaUpload from '$lib/components/MediaUpload.svelte';
+	import ProgressBar from '$lib/components/ProgressBar.svelte';
 
 	export let data: PageData;
 
@@ -139,31 +140,7 @@
 		</div>
 
 		<!-- Progress Bar -->
-		<div class="mb-8">
-			<div class="flex items-center justify-between">
-				{#each Array(totalSteps) as _unused, i (i)}
-					<div class="flex items-center">
-						<div
-							class="flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium {i +
-								1 <=
-							currentStep
-								? 'bg-blue-600 text-white'
-								: 'bg-gray-200 text-gray-600'}"
-						>
-							{i + 1}
-						</div>
-						{#if i < totalSteps - 1}
-							<div
-								class="mx-2 h-1 w-16 {i + 1 < currentStep ? 'bg-blue-600' : 'bg-gray-200'}"
-							></div>
-						{/if}
-					</div>
-				{/each}
-			</div>
-			<div class="mt-2 text-sm text-gray-600">
-				Step {currentStep} of {totalSteps}
-			</div>
-		</div>
+		<ProgressBar {currentStep} {totalSteps} onStepClick={(step) => (currentStep = step)} />
 
 		<!-- Error Message -->
 		{#if error}
@@ -188,7 +165,7 @@
 								type="text"
 								id="title"
 								required
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Enter property title"
 							/>
 						</div>
@@ -200,7 +177,7 @@
 								bind:value={formData.propertyType}
 								id="propertyType"
 								required
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 							>
 								<option value="apartment">Apartment</option>
 								<option value="house">House</option>
@@ -219,7 +196,7 @@
 								id="price"
 								required
 								min="0"
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Enter price"
 							/>
 						</div>
@@ -231,7 +208,7 @@
 								bind:value={formData.status}
 								id="status"
 								required
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 							>
 								<option value="draft">Draft</option>
 								<option value="published">Published</option>
@@ -250,7 +227,7 @@
 								id="description"
 								required
 								rows="4"
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Describe your property..."
 							></textarea>
 						</div>
@@ -272,7 +249,7 @@
 								type="text"
 								id="address"
 								required
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Enter street address"
 							/>
 						</div>
@@ -285,7 +262,7 @@
 								type="text"
 								id="city"
 								required
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Enter city"
 							/>
 						</div>
@@ -298,7 +275,7 @@
 								type="text"
 								id="postalCode"
 								required
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Enter postal code"
 							/>
 						</div>
@@ -311,7 +288,7 @@
 								type="text"
 								id="country"
 								required
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Enter country"
 							/>
 						</div>
@@ -324,7 +301,7 @@
 								type="number"
 								id="latitude"
 								step="any"
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Enter latitude"
 							/>
 						</div>
@@ -337,7 +314,7 @@
 								type="number"
 								id="longitude"
 								step="any"
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Enter longitude"
 							/>
 						</div>
@@ -359,7 +336,7 @@
 								type="number"
 								id="bedrooms"
 								min="0"
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Number of bedrooms"
 							/>
 						</div>
@@ -372,7 +349,7 @@
 								type="number"
 								id="bathrooms"
 								min="0"
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Number of bathrooms"
 							/>
 						</div>
@@ -385,7 +362,7 @@
 								type="number"
 								id="squareMeters"
 								min="0"
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Total square meters"
 							/>
 						</div>
@@ -399,7 +376,7 @@
 								id="yearBuilt"
 								min="1800"
 								max={new Date().getFullYear()}
-								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 								placeholder="Year built"
 							/>
 						</div>

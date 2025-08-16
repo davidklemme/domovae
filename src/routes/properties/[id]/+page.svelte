@@ -153,14 +153,14 @@
 								<button
 									onclick={prevImage}
 									disabled={currentImageIndex === 0}
-									class="absolute left-4 top-1/2 -translate-y-1/2 transform rounded-full bg-white bg-opacity-80 p-2 hover:bg-opacity-100 disabled:opacity-50"
+									class="bg-opacity-80 hover:bg-opacity-100 absolute top-1/2 left-4 -translate-y-1/2 transform rounded-full bg-white p-2 disabled:opacity-50"
 								>
 									←
 								</button>
 								<button
 									onclick={nextImage}
 									disabled={currentImageIndex === property.media.length - 1}
-									class="absolute right-4 top-1/2 -translate-y-1/2 transform rounded-full bg-white bg-opacity-80 p-2 hover:bg-opacity-100 disabled:opacity-50"
+									class="bg-opacity-80 hover:bg-opacity-100 absolute top-1/2 right-4 -translate-y-1/2 transform rounded-full bg-white p-2 disabled:opacity-50"
 								>
 									→
 								</button>
@@ -168,7 +168,7 @@
 						</div>
 						{#if property.media.length > 1}
 							<div class="mt-4 flex space-x-2">
-								{#each property.media as _, index}
+								{#each property.media as _, index (index)}
 									<button
 										onclick={() => goToImage(index)}
 										class="h-16 w-16 overflow-hidden rounded-lg {currentImageIndex === index
@@ -227,7 +227,7 @@
 					<div class="mb-8 rounded-lg bg-white p-6 shadow-sm">
 						<h2 class="mb-4 text-xl font-semibold">Amenities</h2>
 						<div class="grid grid-cols-2 gap-3 md:grid-cols-3">
-							{#each property.amenities as propertyAmenity}
+							{#each property.amenities as propertyAmenity (propertyAmenity.amenity.id)}
 								<div class="flex items-center space-x-2">
 									<span class="text-green-500">✓</span>
 									<span class="text-gray-700">{propertyAmenity.amenity.name}</span>

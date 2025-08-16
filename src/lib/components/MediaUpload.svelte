@@ -198,8 +198,9 @@
 							class="h-32 w-full rounded-lg object-cover"
 						/>
 						<button
+							type="button"
 							onclick={() => deleteMedia(media.id)}
-							class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100"
+							class="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100"
 							title="Delete image"
 						>
 							×

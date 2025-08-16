@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import MediaUpload from '$lib/components/MediaUpload.svelte';
+	import ProgressBar from '$lib/components/ProgressBar.svelte';
 
 	let currentStep = 1;
 	let totalSteps = 4;
@@ -126,8 +127,8 @@
 					`Failed to save draft (Status: ${response.status})`;
 			}
 		} catch (err) {
-			console.error('Error in saveDraft:', err);
 			error = 'Failed to save draft. Please try again.';
+			console.error(err);
 		} finally {
 			isLoading = false;
 		}
@@ -157,7 +158,7 @@
 				const errorData = await response.json();
 				error = errorData.message || 'Failed to publish property';
 			}
-		} catch (err) {
+		} catch {
 			error = 'Failed to publish property. Please try again.';
 		} finally {
 			isLoading = false;
@@ -223,34 +224,7 @@
 			</div>
 
 			<!-- Progress Bar -->
-			<div class="mb-8">
-				<div class="flex items-center justify-between">
-					{#each Array(totalSteps) as _unused, i (i)}
-						{@const stepNumber = i + 1}
-						<div class="flex items-center">
-							<div
-								class="flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium {currentStep >=
-								stepNumber
-									? 'bg-indigo-600 text-white'
-									: 'bg-gray-200 text-gray-600'}"
-							>
-								{stepNumber}
-							</div>
-							{#if stepNumber < totalSteps}
-								<div
-									class="h-1 w-16 {currentStep > stepNumber ? 'bg-indigo-600' : 'bg-gray-200'}"
-								></div>
-							{/if}
-						</div>
-					{/each}
-				</div>
-				<div class="mt-4 flex justify-between text-sm text-gray-600">
-					<span>Basic Info</span>
-					<span>Location</span>
-					<span>Media</span>
-					<span>Details</span>
-				</div>
-			</div>
+			<ProgressBar {currentStep} {totalSteps} onStepClick={(step) => (currentStep = step)} />
 
 			<!-- Error Message -->
 			{#if error}
@@ -593,7 +567,7 @@
 						<button
 							onclick={publishProperty}
 							disabled={isLoading || !validateCurrentStep()}
-							class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 sm:ml-3 sm:w-auto sm:text-sm"
+							class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50 sm:ml-3 sm:w-auto sm:text-sm"
 						>
 							{isLoading ? 'Publishing...' : 'Publish Property'}
 						</button>
@@ -601,7 +575,7 @@
 						<button
 							onclick={nextStep}
 							disabled={!validateCurrentStep()}
-							class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 sm:ml-3 sm:w-auto sm:text-sm"
+							class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50 sm:ml-3 sm:w-auto sm:text-sm"
 						>
 							Next
 						</button>
@@ -610,7 +584,7 @@
 					{#if currentStep > 1}
 						<button
 							onclick={prevStep}
-							class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+							class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm"
 						>
 							Previous
 						</button>
@@ -619,7 +593,7 @@
 					<button
 						onclick={saveDraft}
 						disabled={isLoading}
-						class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+						class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm"
 					>
 						{isLoading ? 'Saving...' : 'Save Draft'}
 					</button>
