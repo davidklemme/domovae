@@ -118,25 +118,31 @@ export const getPropertyQuestions = async (propertyId: number, session?: Session
 		orderBy: [desc(propertyQuestions.createdAt)]
 	});
 
-	// Filter questions based on user permissions
-	if (!session?.user) {
-		// Non-authenticated users only see published Q&As
-		return questions.filter(
-			(q) => q.status === 'published' && q.answers.some((a) => a.isPublished)
-		);
-	} else {
-		// Authenticated users see:
-		// - All published Q&As
-		// - Their own questions (regardless of status)
-		// - Questions for properties they own (regardless of status)
-		return questions.filter(
-			(q) =>
-				(q.status === 'published' && q.answers.some((a) => a.isPublished)) ||
-				q.askedBy === session.user.id ||
-				// Note: We'll need to check property ownership in the calling function
-				true // For now, show all questions to authenticated users
-		);
+	// Determine viewer permissions
+	const viewerId = session?.user?.id;
+	const viewerRole = (session?.user as { role?: 'buyer' | 'owner' | 'admin' })?.role || 'buyer';
+	let isOwner = false;
+	if (viewerId) {
+		const property = await db.query.properties.findFirst({ where: eq(properties.id, propertyId) });
+		isOwner = !!property && property.ownerId === viewerId;
 	}
+	const isAdmin = viewerRole === 'admin';
+
+	// Filter questions based on user permissions
+	if (!viewerId) {
+		// Non-authenticated users only see published Q&As
+		return questions.filter((q) => q.status === 'published' && q.answers.some((a) => a.isPublished));
+	}
+
+	if (isOwner || isAdmin) {
+		return questions; // Full access
+	}
+
+	// Authenticated non-owner users: published or their own
+	return questions.filter(
+		(q) =>
+			(q.status === 'published' && q.answers.some((a) => a.isPublished)) || q.askedBy === viewerId
+	);
 };
 
 // Get questions for property owner (dashboard view)

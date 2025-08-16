@@ -4,6 +4,15 @@ import { db } from '$lib/server/db';
 import { properties } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 
+function escapeXml(input: string): string {
+	return input
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&apos;');
+}
+
 export const GET: RequestHandler = async ({ url }) => {
 	try {
 		// Get all live properties
@@ -24,34 +33,34 @@ export const GET: RequestHandler = async ({ url }) => {
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <!-- Homepage -->
   <url>
-    <loc>${baseUrl}</loc>
+    <loc>${escapeXml(baseUrl)}</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   
   <!-- Properties listing page -->
   <url>
-    <loc>${baseUrl}/properties</loc>
+    <loc>${escapeXml(baseUrl + '/properties')}</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   
   <!-- Individual property pages -->
   ${liveProperties
-		.map((property) => {
-			const propertyUrl = `${baseUrl}/properties/${property.id}`;
-			const lastmod = property.updatedAt
-				? new Date(property.updatedAt).toISOString()
-				: new Date().toISOString();
+			.map((property) => {
+				const propertyUrl = `${baseUrl}/properties/${property.id}`;
+				const lastmod = property.updatedAt
+					? new Date(property.updatedAt).toISOString()
+					: new Date().toISOString();
 
-			return `  <url>
-    <loc>${propertyUrl}</loc>
-    <lastmod>${lastmod}</lastmod>
+				return `  <url>
+    <loc>${escapeXml(propertyUrl)}</loc>
+    <lastmod>${escapeXml(lastmod)}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`;
-		})
-		.join('\n')}
+			})
+			.join('\n')}
 </urlset>`;
 
 		return new Response(sitemap, {
@@ -61,7 +70,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			}
 		});
 	} catch (error) {
-		console.error('Error generating sitemap:', error);
+		console.error('Error generating sitemap');
 		return new Response('Error generating sitemap', { status: 500 });
 	}
 };
