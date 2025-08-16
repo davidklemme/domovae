@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 	import type { PageData } from './$types';
 	import PropertyQA from '$lib/components/PropertyQA.svelte';
 	import ScheduleAction from '$lib/components/ScheduleAction.svelte';
@@ -71,13 +73,23 @@
 	}
 
 	function nextImage() {
-		if (property.media && currentImageIndex < property.media.length - 1) {
+		if (
+			property.media &&
+			Array.isArray(property.media) &&
+			property.media.length > 0 &&
+			currentImageIndex < property.media.length - 1
+		) {
 			currentImageIndex++;
 		}
 	}
 
 	function prevImage() {
-		if (currentImageIndex > 0) {
+		if (
+			property.media &&
+			Array.isArray(property.media) &&
+			property.media.length > 0 &&
+			currentImageIndex > 0
+		) {
 			currentImageIndex--;
 		}
 	}
@@ -87,12 +99,69 @@
 	}
 
 	function openImageModal() {
-		isImageModalOpen = true;
+		if (
+			property.media &&
+			Array.isArray(property.media) &&
+			property.media.length > 0 &&
+			property.media[0]
+		) {
+			currentImageIndex = 0; // Reset to first image
+			isImageModalOpen = true;
+		}
 	}
 
 	function closeImageModal() {
 		isImageModalOpen = false;
+		// Reset currentImageIndex when closing modal
+		if (!property.media || !Array.isArray(property.media) || property.media.length === 0) {
+			currentImageIndex = 0;
+		}
 	}
+
+	// Helper function to prevent image download
+	function preventDownload(event: Event) {
+		event.preventDefault();
+	}
+
+	// Keyboard navigation for image modal
+	function handleKeydown(event: KeyboardEvent) {
+		if (!browser || !isImageModalOpen || !property.media || property.media.length <= 1) return;
+
+		switch (event.key) {
+			case 'ArrowLeft':
+				event.preventDefault();
+				prevImage();
+				break;
+			case 'ArrowRight':
+				event.preventDefault();
+				nextImage();
+				break;
+			case 'Escape':
+				event.preventDefault();
+				closeImageModal();
+				break;
+		}
+	}
+
+	// Add keyboard event listener when modal opens (only in browser)
+	$: if (browser && isImageModalOpen) {
+		// Add event listener in next tick to ensure modal is rendered
+		setTimeout(() => {
+			document.addEventListener('keydown', handleKeydown);
+		}, 0);
+	} else if (browser) {
+		// Remove event listener when modal closes
+		document.removeEventListener('keydown', handleKeydown);
+	}
+
+	// Cleanup event listener on component destroy
+	onMount(() => {
+		return () => {
+			if (browser) {
+				document.removeEventListener('keydown', handleKeydown);
+			}
+		};
+	});
 
 	// Parse neighborhood highlights from database or use defaults
 	const neighborhoodHighlights = property.neighborhoodHighlights
@@ -123,7 +192,7 @@
 </svelte:head>
 
 <!-- Image Modal -->
-{#if isImageModalOpen}
+{#if isImageModalOpen && property.media && property.media.length > 0 && property.media[currentImageIndex]}
 	<div
 		class="bg-opacity-90 fixed inset-0 z-50 flex items-center justify-center bg-black"
 		onclick={closeImageModal}
@@ -133,10 +202,20 @@
 				src={property.media[currentImageIndex].mediaUrl}
 				alt={property.title}
 				class="max-h-full max-w-full object-contain"
+				draggable="false"
+				oncontextmenu={(e) => e.preventDefault()}
+				onmousedown={(e) => e.preventDefault()}
+				onselectstart={(e) => e.preventDefault()}
+				oncopy={(e) => e.preventDefault()}
+				oncut={(e) => e.preventDefault()}
+				onpaste={(e) => e.preventDefault()}
 			/>
 			{#if property.media.length > 1}
 				<button
-					onclick={prevImage}
+					onclick={(e) => {
+						e.stopPropagation();
+						prevImage();
+					}}
 					disabled={currentImageIndex === 0}
 					class="bg-opacity-90 absolute top-1/2 left-4 -translate-y-1/2 transform rounded-full bg-white p-3 text-slate-800 shadow-lg transition-all hover:bg-white disabled:opacity-50"
 				>
@@ -150,7 +229,10 @@
 					</svg>
 				</button>
 				<button
-					onclick={nextImage}
+					onclick={(e) => {
+						e.stopPropagation();
+						nextImage();
+					}}
 					disabled={currentImageIndex === property.media.length - 1}
 					class="bg-opacity-90 absolute top-1/2 right-4 -translate-y-1/2 transform rounded-full bg-white p-3 text-slate-800 shadow-lg transition-all hover:bg-white disabled:opacity-50"
 				>
@@ -161,7 +243,10 @@
 				</button>
 			{/if}
 			<button
-				onclick={closeImageModal}
+				onclick={(e) => {
+					e.stopPropagation();
+					closeImageModal();
+				}}
 				class="bg-opacity-90 hover:bg-opacity-100 absolute top-4 right-4 rounded-full bg-white p-2 text-slate-800"
 			>
 				✕
@@ -189,6 +274,7 @@
 					</svg>
 					<span>Back to Properties</span>
 				</button>
+
 				{#if data.session?.user?.id === property.ownerId || data.session?.user?.role === 'admin'}
 					<div class="flex space-x-3">
 						<button
@@ -277,7 +363,7 @@
 		<div class="mb-12 grid grid-cols-1 gap-12 lg:grid-cols-5">
 			<!-- Hero Image Gallery -->
 			<div class="lg:col-span-4">
-				{#if property.media && property.media.length > 0}
+				{#if property.media && Array.isArray(property.media) && property.media.length > 0 && property.media[0]}
 					<div class="relative overflow-hidden rounded-lg bg-white">
 						{#if property.media.length === 1}
 							<!-- Single image -->
@@ -286,6 +372,13 @@
 									src={property.media[0].mediaUrl}
 									alt={property.title}
 									class="h-full w-full cursor-pointer object-cover transition-transform hover:scale-105"
+									draggable="false"
+									oncontextmenu={preventDownload}
+									onmousedown={preventDownload}
+									onselectstart={preventDownload}
+									oncopy={preventDownload}
+									oncut={preventDownload}
+									onpaste={preventDownload}
 									onclick={openImageModal}
 								/>
 								<div
@@ -301,6 +394,13 @@
 										src={property.media[0].mediaUrl}
 										alt={property.title}
 										class="h-full w-full cursor-pointer object-cover transition-transform hover:scale-105"
+										draggable="false"
+										oncontextmenu={preventDownload}
+										onmousedown={preventDownload}
+										onselectstart={preventDownload}
+										oncopy={preventDownload}
+										oncut={preventDownload}
+										onpaste={preventDownload}
 										onclick={() => {
 											currentImageIndex = 0;
 											openImageModal();
@@ -316,6 +416,13 @@
 												src={property.media[index + 1].mediaUrl}
 												alt={property.title}
 												class="h-full w-full cursor-pointer object-cover transition-transform hover:scale-105"
+												draggable="false"
+												oncontextmenu={preventDownload}
+												onmousedown={preventDownload}
+												onselectstart={preventDownload}
+												oncopy={preventDownload}
+												oncut={preventDownload}
+												onpaste={preventDownload}
 												onclick={() => {
 													currentImageIndex = index + 1;
 													openImageModal();
@@ -359,6 +466,13 @@
 													src={property.media[index].mediaUrl}
 													alt="Photo {index + 1}"
 													class="h-20 w-32 object-cover"
+													draggable="false"
+													oncontextmenu={preventDownload}
+													onmousedown={preventDownload}
+													onselectstart={preventDownload}
+													oncopy={preventDownload}
+													oncut={preventDownload}
+													onpaste={preventDownload}
 												/>
 											</button>
 										{/each}

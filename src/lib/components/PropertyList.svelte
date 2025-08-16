@@ -260,7 +260,7 @@
 				<p class="text-gray-600">Try adjusting your search criteria or check back later.</p>
 			</div>
 		{:else}
-			<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+			<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
 				{#each filteredProperties as property (property.id)}
 					<div
 						onclick={() => goto(`/properties/${property.id}`)}

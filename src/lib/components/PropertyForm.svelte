@@ -53,6 +53,12 @@
 		}
 	}
 
+	function goToStep(step: number) {
+		if (step >= 1 && step <= totalSteps) {
+			currentStep = step;
+		}
+	}
+
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 
@@ -135,7 +141,7 @@
 		</div>
 
 		<!-- Progress Bar -->
-		<ProgressBar {currentStep} {totalSteps} />
+		<ProgressBar {currentStep} {totalSteps} onStepClick={goToStep} />
 
 		<!-- Error Message -->
 		{#if error}
@@ -177,89 +183,6 @@
 								class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
 								placeholder="Beautiful 3-bedroom apartment in city center"
 							/>
-						</div>
-
-						<div class="sm:col-span-2">
-							<label for="description" class="block text-sm font-medium text-gray-700"
-								>Description</label
-							>
-							<textarea
-								id="description"
-								bind:value={formData.description}
-								rows="6"
-								class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-								placeholder="# About This Property
-
-This **stunning property** offers the perfect blend of modern comfort and timeless elegance.
-
-## Key Features
-- Modern kitchen with island
-- Balcony with city views  
-- Built-in wardrobes
-- Underfloor heating
-
-Located in a highly sought-after neighborhood, this home provides an exceptional living experience."
-							></textarea>
-							<p class="mt-1 text-sm text-gray-500">
-								💡 You can use <strong>Markdown</strong> formatting: **bold**, *italic*, # headings,
-								- lists, etc.
-							</p>
-						</div>
-
-						<div class="sm:col-span-2">
-							<label for="locationDescription" class="block text-sm font-medium text-gray-700"
-								>Location Description</label
-							>
-							<textarea
-								id="locationDescription"
-								bind:value={formData.locationDescription}
-								rows="4"
-								class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-								placeholder="## Perfect Location
-
-Nestled in the heart of the city, this property enjoys an **enviable location** that combines urban convenience with residential tranquility.
-
-### Nearby Amenities
-- **Schools**: Top-rated schools within walking distance
-- **Transportation**: Metro station 5 min walk
-- **Shopping**: Modern shopping center 10 min away
-- **Parks**: Beautiful green spaces nearby"
-							></textarea>
-							<p class="mt-1 text-sm text-gray-500">
-								💡 Use markdown to highlight key location features and amenities.
-							</p>
-						</div>
-
-						<div class="sm:col-span-2">
-							<label for="neighborhoodHighlights" class="block text-sm font-medium text-gray-700"
-								>Neighborhood Highlights (one per line)</label
-							>
-							<textarea
-								id="neighborhoodHighlights"
-								bind:value={formData.neighborhoodHighlights}
-								rows="4"
-								class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-								placeholder="🚇 5 min walk to metro station&#10;🏫 Excellent schools nearby&#10;🛒 Shopping center 10 min away&#10;🌳 Beautiful parks in the area&#10;🍽️ Trendy restaurants & cafes"
-							></textarea>
-							<p class="mt-1 text-sm text-gray-500">
-								Add one highlight per line. You can use emojis to make it more engaging!
-							</p>
-						</div>
-
-						<div class="sm:col-span-2">
-							<label for="propertyHighlights" class="block text-sm font-medium text-gray-700"
-								>Property Features (one per line)</label
-							>
-							<textarea
-								id="propertyHighlights"
-								bind:value={formData.propertyHighlights}
-								rows="4"
-								class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-								placeholder="Modern kitchen with island&#10;Balcony with city views&#10;Built-in wardrobes&#10;Underfloor heating&#10;Smart home features&#10;Private parking space"
-							></textarea>
-							<p class="mt-1 text-sm text-gray-500">
-								List the key features that make this property special. One feature per line.
-							</p>
 						</div>
 
 						<div>
@@ -380,6 +303,89 @@ Nestled in the heart of the city, this property enjoys an **enviable location** 
 								class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
 								placeholder="2020"
 							/>
+						</div>
+
+						<div class="sm:col-span-2">
+							<label for="description" class="block text-sm font-medium text-gray-700"
+								>Description</label
+							>
+							<textarea
+								id="description"
+								bind:value={formData.description}
+								rows="6"
+								class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+								placeholder="# About This Property
+
+This **stunning property** offers the perfect blend of modern comfort and timeless elegance.
+
+## Key Features
+- Modern kitchen with island
+- Balcony with city views  
+- Built-in wardrobes
+- Underfloor heating
+
+Located in a highly sought-after neighborhood, this home provides an exceptional living experience."
+							></textarea>
+							<p class="mt-1 text-sm text-gray-500">
+								💡 You can use <strong>Markdown</strong> formatting: **bold**, *italic*, # headings,
+								- lists, etc.
+							</p>
+						</div>
+
+						<div class="sm:col-span-2">
+							<label for="locationDescription" class="block text-sm font-medium text-gray-700"
+								>Location Description</label
+							>
+							<textarea
+								id="locationDescription"
+								bind:value={formData.locationDescription}
+								rows="4"
+								class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+								placeholder="## Perfect Location
+
+Nestled in the heart of the city, this property enjoys an **enviable location** that combines urban convenience with residential tranquility.
+
+### Nearby Amenities
+- **Schools**: Top-rated schools within walking distance
+- **Transportation**: Metro station 5 min walk
+- **Shopping**: Modern shopping center 10 min away
+- **Parks**: Beautiful green spaces nearby"
+							></textarea>
+							<p class="mt-1 text-sm text-gray-500">
+								💡 Use markdown to highlight key location features and amenities.
+							</p>
+						</div>
+
+						<div class="sm:col-span-2">
+							<label for="neighborhoodHighlights" class="block text-sm font-medium text-gray-700"
+								>Neighborhood Highlights (one per line)</label
+							>
+							<textarea
+								id="neighborhoodHighlights"
+								bind:value={formData.neighborhoodHighlights}
+								rows="4"
+								class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+								placeholder="🚇 5 min walk to metro station&#10;🏫 Excellent schools nearby&#10;🛒 Shopping center 10 min away&#10;🌳 Beautiful parks in the area&#10;🍽️ Trendy restaurants & cafes"
+							></textarea>
+							<p class="mt-1 text-sm text-gray-500">
+								Add one highlight per line. You can use emojis to make it more engaging!
+							</p>
+						</div>
+
+						<div class="sm:col-span-2">
+							<label for="propertyHighlights" class="block text-sm font-medium text-gray-700"
+								>Property Features (one per line)</label
+							>
+							<textarea
+								id="propertyHighlights"
+								bind:value={formData.propertyHighlights}
+								rows="4"
+								class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+								placeholder="Modern kitchen with island&#10;Balcony with city views&#10;Built-in wardrobes&#10;Underfloor heating&#10;Smart home features&#10;Private parking space"
+							></textarea>
+							<p class="mt-1 text-sm text-gray-500">
+								List the key features that make this property special. One feature per line.
+							</p>
 						</div>
 					</div>
 				</div>

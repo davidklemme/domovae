@@ -414,7 +414,7 @@ Domovae is a real estate platform that helps property owners sell their houses o
 
 ### Feature 6.1: SEO Optimization
 
-**Description**: Implement comprehensive SEO features for property listings
+**Description**: Implement comprehensive SEO and AI-crawl features for property listings
 
 #### Tasks:
 
@@ -422,34 +422,53 @@ Domovae is a real estate platform that helps property owners sell their houses o
   - Property-specific title tags
   - Meta descriptions with property details
   - Open Graph tags for social sharing
+  - Twitter card metadata
   - **Estimate**: 6 hours
-  - **Acceptance Criteria**: Each property page has optimized meta tags
+  - **Acceptance Criteria**: Each property page has optimized meta tags for search engines and social platforms
 
 - [ ] **TASK-6.1.2**: Create structured data (JSON-LD)
-  - Property schema markup
-  - Real estate specific structured data
+  - Property schema markup (Offer + SingleFamilyResidence)
+  - Breadcrumb schema for listings
+  - Website + SearchAction schema for homepage
+  - FAQ schema block for each listing
   - Local business schema for agents
-  - **Estimate**: 8 hours
-  - **Acceptance Criteria**: Search engines can understand property data
+  - **Estimate**: 10 hours
+  - **Acceptance Criteria**: Search engines and AI crawlers can parse full property details and site context
 
 - [ ] **TASK-6.1.3**: Implement sitemap generation
   - Dynamic XML sitemap for properties
-  - Sitemap submission to search engines
-  - **Estimate**: 4 hours
-  - **Acceptance Criteria**: Sitemap is generated and accessible
+  - Include image support in sitemap
+  - Sitemap submission endpoint for search engines
+  - **Estimate**: 6 hours
+  - **Acceptance Criteria**: Sitemap is generated, includes images, and is accessible at `/sitemap.xml`
 
 - [ ] **TASK-6.1.4**: Create SEO-friendly URLs
-  - Property slug generation
+  - Property slug generation based on title/location
   - Location-based URL structure
-  - **Estimate**: 4 hours
-  - **Acceptance Criteria**: URLs are SEO-friendly and descriptive
+  - Canonical tags for each listing
+  - **Estimate**: 5 hours
+  - **Acceptance Criteria**: URLs are human-readable, descriptive, and canonicalized
+
+- [ ] **TASK-6.1.5**: Robots and crawl control
+  - Implement `robots.txt` allowing all bots + GPTBot/Perplexity
+  - Ensure no orphan pages (all listings discoverable)
+  - **Estimate**: 3 hours
+  - **Acceptance Criteria**: Robots.txt accessible, crawlers can index all relevant pages
+
+- [ ] **TASK-6.1.6**: Accessibility and AI-friendly enhancements
+  - Descriptive alt text for all property images
+  - JSON feed endpoint (`/api/listings`) with core listing data
+  - **Estimate**: 6 hours
+  - **Acceptance Criteria**: Listings consumable by AI/agents; images have accessible alt text
 
 #### Tests:
 
-- [ ] Meta tag validation tests
-- [ ] Structured data validation tests
-- [ ] Sitemap generation tests
-- [ ] URL structure tests
+- [ ] Meta tag validation tests (Google Rich Results test, social previews)
+- [ ] Structured data validation tests (Schema.org validator)
+- [ ] Sitemap generation tests (XML validator, index coverage)
+- [ ] URL structure tests (slug correctness, canonical checks)
+- [ ] Robots.txt tests (crawler access)
+- [ ] Alt text and JSON feed validation
 
 ### Feature 6.2: Content Marketing
 
